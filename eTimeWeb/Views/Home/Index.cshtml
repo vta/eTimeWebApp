@@ -1,0 +1,135 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<p style="width:95%">
+
+    <div class="container-fluid" style="margin-left: 20px;">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3><b>Welcome to eTime Management Portal</b></h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h4><b>eTime Announcements</b></h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <b>TSAR Work Schedule Change</b><br>
+                - With this change when the TSAR gets generated, it will look at the Daily schedule for the employee for the 2 week period
+                and create the TSAR according to the Daily schedule for each of those days<br>
+                <b>DIV Admin Functionality for the following</b><br>
+                - Backup Supervisor Admin Screen
+                - eTime Report
+                - TSAR On Demand<br><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h4><b>Coming Soon</b></h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <b>PEAR</b><br>
+                - Validations for saved PEARs with overlapping times
+                <br>
+                <b>TSAR</b><br>
+                - Employee Name on TimeKeeper Notifications
+                <br><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h4><b>Pay Exception Approval Request Process (PEAR)</b></h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                Employee creates new Pay exception Approval Request (PEAR). Supervisor can create new PEAR for one of their Employees<br>
+                <b>Workflow for PEAR</b><br>
+                - Only Employee or their Supervisor can initiate a PEAR<br>
+                - If Supervisor initiates a PEAR, they select their Employee from the drop down
+                list.<br>
+                - Once Employee submits a Request, it gets routed to Supervisor for Review<br>
+                - The Request will be pending approval with ‘Pending Supervisor Review’ status<br>
+                - Each Request may have multiple items with varying Request types/Date/Time
+                combinations for a particular category. The approval for each request will be
+                treated as a single unit comprising of the multiple items.<br><br>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h4><b>TimeSheet Approval Request Process (TSAR)</b></h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                Employee initiates new TimeSheet Request or TimeSheet Requests are automatically kicked off for all Employees (via SharePoint Site or a Website URL). Supervisor or Timekeeper can initiate TSAR for associated employees<br>
+                <b>Workflow for TSAR</b><br>
+                - There will be an automated process to initiate timesheets for each employee
+                every Pay Period<br>
+                - Employees/Supervisors/Timekeepers can manually initiate an eTimeSheet
+                request for current/past/future Pay Periods <br>
+                - Timekeeper can manually initiate an eTimeSheet request for all employees with
+                a Supervisor associated with the TK <br>
+                - Supervisor can manually initiate an eTimeSheet request for all employees
+                reporting to them <br>
+                - Employee/s will receive a Work Item to action. They will fill in their timesheet in
+                the form and submit the request. <br>
+                - Once Employee submits a Request, it gets routed to Supervisor for Review
+                - If Employee does not action the TSAR for a pre-configured no. of days, the TSAR
+                expires and the worklist item gets assigned to Supervisor <br>
+                - Supervisor Reviews the TSAR. Supervisor can Approve or Request for Revision
+                - If Supervisor does not action the TSAR within 24 hours of its receipt, the TSAR
+                expires and the worklist item gets assigned to next level Supervisor and stays
+                there until approved. <br><br>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h4><b>Work Out of Class Process (WOOC)</b></h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                WOOC Assignment Form will be initiated online and filled by the Supervisor and routed. 
+                All other forms will be electronically scanned and attached to the request and routed appropriately. 
+                Comments will be used to guide the employee/timekeeper for entering pay codes<br><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h4><b>Family and Medical Leave Act Process (FMLA)</b></h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                The various applicable forms like FMLA Request, Notice of Eligibility and Rights & Responsibility will be electronically scanned and 
+                attached to the request and routed appropriately.  Comments will be used to guide the employee/timekeeper for entering pay codes<br><br>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-12">
+                <h4><b>Lead Training Pay Request Process (LTPR)</b></h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                Lead/Training Pay Request Form, Supervisor Review, Chief Review & HR Review Form will be initiated & filled online and routed. 
+                All other forms will be electronically scanned and attached to the request and routed appropriately. 
+                Comments will be used to guide the employee/timekeeper for entering pay codes<br><br>
+            </div>
+        </div>
+       
+
+
+    </div>
+</p>

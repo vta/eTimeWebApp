@@ -1,0 +1,272 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eTime Web</title>
+    @Styles.Render("~/Content/kendo/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Styles.Render("~/Content/ElementStyles")
+    @Scripts.Render("~/bundles/kendo")
+   
+    <!--This CSS entry was added by the Telerik VS Extensions for compatibility reasons-->
+    <link href="@Url.Content("~/Content/kendo.compatibility.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2014.3.1316/kendo.common.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2014.3.1316/kendo.mobile.all.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2014.3.1316/kendo.dataviz.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2014.3.1316/kendo.default.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2014.3.1316/kendo.dataviz.default.min.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/kendo/2014.3.1316/jquery.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2014.3.1316/jszip.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2014.3.1316/kendo.all.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2014.3.1316/kendo.aspnetmvc.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo.modernizr.custom.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
+    
+
+
+</head>
+<body>
+    <nav class="navbar navbar-inverse " style="border:none; border-color:transparent">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a id="headerImage" href="@Url.Action("Home", "About")">
+                        <img src="@Url.Content("~/Content/Images/eTimeVTALogo.jpg")" style="text-decoration: none; border: 0px; width:100%; height:20%; text-align:left" />
+                    </a>
+                </div>
+            </div>
+
+            <div class="row" style="font-weight:bold;background-color:lightgray">
+                <div class="col-sm-9">
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav" style="font-weight:bold;background-color:lightgray">
+                            <li>
+                                <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/TSARMyRequests.SMF">eTime Home</a>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">PEAR<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/PEARMainEmp.SMF">Create/Modify PEAR</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/PEARMyRequests">My PEAR Dashboard</a>
+                                    </li>
+
+                                </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">TSAR<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/TSAROnDemand.SMF">TSAR OnDemand</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/TSARMyRequests">My TSAR Dashboard</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("TSAR Items", "Index", "TSAR")</li>
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("Requests Reviewed By Me", "Index", "TSARDashboard")</li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">WOOC<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/WOOC.SMF">Create New WOOC</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/WOOCMyRequests.SMF">My WOOC Dashboard</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/WOOCSuperAdmin.SMF">WOOC Supervisor Access</a>
+                                    </li>
+
+                                </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">FMLA<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    @*<li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/FMLAMainEmp.SMF">Create New FMLA</a>
+                                    </li>*@
+                                    @*<li><a href=@Url.Action("Index", "FMLA")>Create New FMLA</a></li>*@
+                                    <li>@Html.ActionLink("Create New FMLA", "GetMainPdf", "FMLA")</li>
+                                    
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("FMLA Dashboard", "GetDashPdf", "FMLA")</li>
+                                    @*<li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/FMLAMyRequests.SMF">My FMLA Dashboard</a>
+                                    </li>*@
+
+                                </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Lead/Training Pay<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/LeadTrainingMainEmp.SMF">Create New LTPR</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/LTPRMyRequests.SMF">My LTPR Dashboard</a>
+                                    </li>
+
+                                </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">System Tools<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/eTimeWorklist">My eTime Worklist</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/eTimeReport.SMF">eTime Report</a>
+                                    </li>
+
+                                </ul>
+                            </li>
+
+                            @*<li>@Html.ActionLink("Accounts Payable", "eInvoice", "Home")</li>*@
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/eTimeTKAdmin.SMF">Timekeeper Administration</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/eTimeEmployeeTKAdmin.SMF">Employee Timekeeper Administration</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/eTimeBackupSupAdmin.SMF">Backup Supervisor Administration</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="@(System.Configuration.ConfigurationManager.AppSettings["K2Server"])/Runtime/Runtime/Form/eTimeRolesAdmin.SMF">eTime Roles Administration</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("OOO Delegation", "Index", "Home")</li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">eTime Help Center <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("Help", "Test", "Home")</li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        @Html.ActionLink(" Click here for Training Material", "TrainingMaterial", "HelpCenter")
+                                        @*<a href="http://rorwdp1.vta.org/gm/cabinet-1.25.1001?mode=EU">Click here for Training Material</a>*@
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        @Html.ActionLink("Release Notes", "ReleaseNotes", "HelpCenter")
+                                        @*<a href="http://thehub.vta.org/etime/Release%20Notes/Forms/AllItems.aspx">Release Notes</a>*@
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        @Html.ActionLink("Getting Started", "GettingStarted", "HelpCenter")
+                                        @*<a href="http://thehub.vta.org/etime/Release%20Notes/Forms/AllItems.aspx">Getting Started</a>*@
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        @Html.ActionLink("Getting Started", "GettingStarted", "HelpCenter")
+                                        <a href="http://thehub.vta.org/etime/Release%20Notes/Forms/AllItems.aspx">Help(How to Notes/Instructions)</a>
+                                    </li>
+                                    @*<li class="divider"></li>
+                                    <li>@Html.ActionLink("Test Upload", "TestUpload", "Home")</li>*@
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+
+
+
+                </div>
+
+                <div class="col-sm-3">
+                    @if (Session["LoggedInUserName"] != null)
+                        {
+                        <p class="nav navbar-text navbar-right" style="font-weight:bold; font-size: 12px">
+                            Welcome @Session["LoggedInUserName"].ToString()
+                        </p>
+                        }
+                </div>
+            </div>
+
+
+            <div class="row" style="background-color:#e6e6e6">
+                <div class="col-sm-12">
+
+                    @RenderBody()
+                </div>
+
+            </div>
+
+            <div id="footer">
+                @Html.Partial("_Footer")
+            </div>
+            @*<footer class="text-muted">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <a href="">FAQ</a>
+                        <a></a>
+                        <a></a>
+                        <a></a>
+                        <a></a>
+                        <a href="http://rorwdp1.vta.org/gm/cabinet-1.25.1001?mode=EU">Training Materials</a>
+                        <a href="http://thehub.vta.org/etime/Release%20Notes/Forms/AllItems.aspx">Release Notes</a>
+                        <a href="http://rorwdp1.vta.org/gm/cabinet-1.25.1001?mode=EU">Getting Started</a>
+                        <a href="http://rorwdp1.vta.org/gm/cabinet-1.25.1001?mode=EU">Support</a>
+                    </div>
+                </div>
+            </footer>*@
+            @*<div id="footer">
+                <div class="row">
+                    <a href="http://rorwdp1.vta.org/gm/cabinet-1.25.1001?mode=EU">FAQ</a> <span class="padding">|</span>
+                    <span class="padding"><a href="http://rorwdp1.vta.org/gm/cabinet-1.25.1001?mode=EU">Training Materials</a></span><span class="padding">|</span>
+                    <span class="padding"><a href="http://thehub.vta.org/etime/Release%20Notes/Forms/AllItems.aspx">Release Notes</a></span><span class="padding">|</span>
+                    <span class="padding"><a href="http://thehub.vta.org/etime/Release%20Notes/Forms/AllItems.aspx">Getting Started</a></span><span class="padding">|</span>
+                    <span class="padding"><a href="http://rorwdp1.vta.org/gm/cabinet-1.25.1001?mode=EU">Support</a></span>
+
+                </div>
+            </div>*@
+
+
+        </div>
+    </nav>
+
+
+    
+    @RenderSection("scripts", required: false)
+</body>
+</html>

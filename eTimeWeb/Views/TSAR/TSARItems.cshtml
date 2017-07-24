@@ -1,0 +1,166 @@
+﻿@{
+    ViewBag.Title = "TSARItems";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .k-grid-header th.k-header {
+   text-align: center !important;
+   font-weight: bold;
+}
+
+</style>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            //var grid = $("#GridTSARItems").data("kendoGrid");
+            //$("#GridTSARItems th[data-field=HoursDay1]").html(tr_first);
+        });
+
+        function gridDataBound(e) {
+            //debugger;
+            var item = this.dataSource.get(-1); //Get by ID or any other preferred method
+            this.tbody.find("tr[data-uid='" + item.uid + "']").hide();
+            //this.tbody.find("td:eq(0)").hide();
+            this.hideColumn(0);
+            var uid = item.uid;
+            startDate = new Date($('[data-uid="' + uid + '"] td:first').text());
+            //startDate = new Date($('table tbody tr:eq(0) td:eq(0)').text());
+            
+            dispDate = 'MO</br>(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ')';
+            var grid = $("#GridTSARItems").data("kendoGrid");
+
+            startDate.setDate(startDate.getDate() + 1);
+            $("#GridTSARItems th[data-field=HoursDay1]").html(dispDate);
+            dispDate = 'TU</br>(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ')';
+            startDate.setDate(startDate.getDate() + 1);
+            $("#GridTSARItems th[data-field=HoursDay2]").html(dispDate);
+            dispDate = 'WE</br>(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ')';
+            startDate.setDate(startDate.getDate() + 1);
+            $("#GridTSARItems th[data-field=HoursDay3]").html(dispDate);
+            dispDate = 'TH</br>(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ')';
+            startDate.setDate(startDate.getDate() + 1);
+            $("#GridTSARItems th[data-field=HoursDay4]").html(dispDate);
+            dispDate = 'FR</br>(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ')';
+            startDate.setDate(startDate.getDate() + 1);
+            $("#GridTSARItems th[data-field=HoursDay5]").html(dispDate);
+            dispDate = 'SA</br>(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ')';
+            startDate.setDate(startDate.getDate() + 1);
+            $("#GridTSARItems th[data-field=HoursDay6]").html(dispDate);
+            dispDate = 'SU</br>(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ')';
+            startDate.setDate(startDate.getDate() + 1);
+            $("#GridTSARItems th[data-field=HoursDay7]").html(dispDate);
+            dispDate = 'MO</br>(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ')';
+            startDate.setDate(startDate.getDate() + 1);
+            $("#GridTSARItems th[data-field=HoursDay8]").html(dispDate);
+            dispDate = 'TU</br>(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ')';
+            startDate.setDate(startDate.getDate() + 1);
+            $("#GridTSARItems th[data-field=HoursDay9]").html(dispDate);
+            dispDate = 'WE</br>(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ')';
+            startDate.setDate(startDate.getDate() + 1);
+            $("#GridTSARItems th[data-field=HoursDay10]").html(dispDate);
+            dispDate = 'TH</br>(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ')';
+            startDate.setDate(startDate.getDate() + 1);
+            $("#GridTSARItems th[data-field=HoursDay11]").html(dispDate);
+            dispDate = 'FR</br>(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ')';
+            startDate.setDate(startDate.getDate() + 1);
+            $("#GridTSARItems th[data-field=HoursDay12]").html(dispDate);
+            dispDate = 'SA</br>(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ')';
+            startDate.setDate(startDate.getDate() + 1);
+            $("#GridTSARItems th[data-field=HoursDay13]").html(dispDate);
+            dispDate = 'SU</br>(' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ')';
+            startDate.setDate(startDate.getDate() + 1);
+            $("#GridTSARItems th[data-field=HoursDay14]").html(dispDate);
+        }
+
+    </script>
+   
+
+
+    <h4>TSARItems</h4>
+   
+        @(Html.Kendo().Grid<eTimeWeb.ViewModels.TSARItemsModel>()
+    .Name("GridTSARItems")
+    .Columns(columns =>
+    {
+       
+        columns.Bound(p => p.StartDate);//.Visible(false); ;
+        columns.Bound(p => p.Description);
+        columns.Bound(p => p.PayCode);
+        //columns.Bound(p => p.WBS);
+        columns.Bound(p => p.WBS).EditorTemplateName("_SAPWBS").Title("WBS");
+        //columns.Bound(p => p.InternalOrder);
+        columns.Bound(p => p.InternalOrder).EditorTemplateName("_SAPInternalOrder");
+        //columns.Bound(p => p.CostCenter);
+        columns.Bound(p => p.CostCenter).EditorTemplateName("_SAPCostCenter").HtmlAttributes(new { style = "text-align:right" });                          
+        columns.Bound(p => p.HoursDay1)
+            .ClientFooterTemplate("<div>#= kendo.format('{0:n2}',sum) #</div>");
+        columns.Bound(p => p.HoursDay2)
+            .ClientFooterTemplate("<div>#= kendo.format('{0:n2}',sum) #</div>");
+        columns.Bound(p => p.HoursDay3)
+            .ClientFooterTemplate("<div>#= kendo.format('{0:n2}',sum) #</div>");
+        columns.Bound(p => p.HoursDay4)
+            .ClientFooterTemplate("<div>#= kendo.format('{0:n2}',sum) #</div>");
+        columns.Bound(p => p.HoursDay5)
+            .ClientFooterTemplate("<div>#= kendo.format('{0:n2}',sum) #</div>");
+        columns.Bound(p => p.HoursDay6)
+            .ClientFooterTemplate("<div>#= kendo.format('{0:n2}',sum) #</div>");
+        columns.Bound(p => p.HoursDay7)
+            .ClientFooterTemplate("<div>#= kendo.format('{0:n2}',sum) #</div>");
+        columns.Bound(p => p.HoursDay8)
+            .ClientFooterTemplate("<div>#= kendo.format('{0:n2}',sum) #</div>");
+        columns.Bound(p => p.HoursDay9)
+            .ClientFooterTemplate("<div>#= kendo.format('{0:n2}',sum) #</div>");
+        columns.Bound(p => p.HoursDay10)
+            .ClientFooterTemplate("<div>#= kendo.format('{0:n2}',sum) #</div>");
+        columns.Bound(p => p.HoursDay11)
+            .ClientFooterTemplate("<div>#= kendo.format('{0:n2}',sum) #</div>");
+        columns.Bound(p => p.HoursDay12)
+            .ClientFooterTemplate("<div>#= kendo.format('{0:n2}',sum) #</div>");
+        columns.Bound(p => p.HoursDay13)
+            .ClientFooterTemplate("<div>#= kendo.format('{0:n2}',sum) #</div>");
+        columns.Bound(p => p.HoursDay14)
+            .ClientFooterTemplate("<div>#= kendo.format('{0:n2}',sum) #</div>");
+        columns.Bound(p => p.TimeSheetApprovalRequestItemID).Visible(false);
+    })
+        .Editable(editable => editable.Mode(GridEditMode.InCell))
+        .Sortable()
+        .Pageable()
+        .Navigatable()
+        .AutoBind(true)
+        .Events(events => events.DataBound("gridDataBound"))
+        .DataSource(dataSource =>
+            dataSource.Ajax()
+            .PageSize(10)
+            .ServerOperation(false)
+            .AutoSync(true)
+            .Batch(true)
+            .Model(model =>
+                {
+                    model.Id(p => p.TimeSheetApprovalRequestItemID);
+                    model.Field(p => p.Description).Editable(false);
+                })
+            .Read(read => read.Action("TSARItems_Read", "TSAR"))
+            .Update(update => update.Action("TSARItems_Update", "TSAR"))
+        .PageSize(20)
+        .Aggregates(aggregates =>
+            {
+                aggregates.Add(p => p.HoursDay1).Sum();
+                aggregates.Add(p => p.HoursDay2).Sum();
+                aggregates.Add(p => p.HoursDay3).Sum();
+                aggregates.Add(p => p.HoursDay4).Sum();
+                aggregates.Add(p => p.HoursDay5).Sum();
+                aggregates.Add(p => p.HoursDay6).Sum();
+                aggregates.Add(p => p.HoursDay7).Sum();
+                aggregates.Add(p => p.HoursDay8).Sum();
+                aggregates.Add(p => p.HoursDay9).Sum();
+                aggregates.Add(p => p.HoursDay10).Sum();
+                aggregates.Add(p => p.HoursDay11).Sum();
+                aggregates.Add(p => p.HoursDay12).Sum();
+                aggregates.Add(p => p.HoursDay13).Sum();
+                aggregates.Add(p => p.HoursDay14).Sum();
+            })
+        )
+        )
+

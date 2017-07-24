@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewBag.Title = "TSARRequestsReviewedbyMe";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>TSARRequestsReviewedbyMe</h4>
+
+@(Html.Kendo().Grid<eTimeWeb.ViewModels.TSARRequestsReviewedByMeModel>()
+    .Name("GridTSARRequestsReviewedbyMe")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.TSARID); //.Visible(false);
+        columns.Bound(p => p.EmpName);
+        columns.Bound(p => p.PayTypePeriod);
+        columns.Bound(p => p.SubmittedDate);
+        columns.Bound(p => p.SupervisorApprovalDateTime);
+        columns.Bound(p => p.Status);
+    })
+        .Sortable()
+        .Pageable()
+        .Navigatable()
+        .AutoBind(true)
+        .DataSource(dataSource =>
+            dataSource.Ajax()
+            .PageSize(10)
+            .ServerOperation(false)
+            .Model(model =>
+                {
+                model.Id(p => p.TSARID);
+                })
+            .Read(read => read.Action("TSARRequestsReviewedByMe_Read", "TSARDashboard"))
+        .PageSize(20)
+                     )
+)
+
+
