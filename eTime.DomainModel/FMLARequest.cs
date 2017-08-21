@@ -101,4 +101,35 @@ namespace eTime.DomainModel
 
         public virtual ICollection<FMLAProjections> FMLAProjections { get; set; }
     }
+
+    public class FMLAEmployeeProfile
+    {
+        public int EmployeeID { get; set; }
+
+        public string Name { get; set; }
+
+        public string SupervisorName { get; set; }
+
+        public string Division { get; set; }
+
+        public string CostCenterDesc { get; set; }
+
+        public DateTime? SubmittedDate { get; set; }
+
+        public string JobDescription { get; set; }
+
+        public string Title { get; set; }
+
+        public string Union { get; set; }
+
+        public string Address { get; set; }
+
+        public string WorkSchedule { get; set; }
+    }
+
+    public class FMLAEmployeeForDD
+    {
+        public int EmployeeID { get; set; }
+        public string EmployeeName { get; set; }
+    }
 }

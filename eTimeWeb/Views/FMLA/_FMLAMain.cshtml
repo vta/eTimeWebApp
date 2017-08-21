@@ -1,0 +1,70 @@
+﻿@using System.Collections
+@using Kendo.Mvc.UI
+@model eTimeWeb.ViewModels.FMLAEmployeeViewModel
+
+@{
+    ViewBag.Title = "FMLAMain";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Ajax.BeginForm("GetFMLAEmpDetailsforEmpDD", "FMLA", new AjaxOptions()
+                                                   {
+                                                       HttpMethod = "POST",
+                                                       UpdateTargetId = "employeeDetailsTable"
+                                                   }, new { id = "form1" }))
+{
+    <div id="form" class="container-fluid border-box-sizing">
+        <p><h3 align="center"><b>&nbsp;&nbsp;Family and Medical Leave Act (FMLA) Form</b></h3></p>
+
+        This form is used to request approval for leave under the Family and Medical Leave of Absence Policy and California Family Rights Act.
+        A leave request based on an employee’s serious health condition or the serious health condition of an employee’s spouse, registered domestic partner,
+        child, child of a registered domestic partner, or parent and must be accompanied by the proper medical certification form indicating a serious health
+        condition. <b>
+            This Request Form must be submitted to your supervisor at least 30 days prior to the commencement of leave for an anticipated absence due to
+            a serious health condition, or the same day you return to work for unforeseen absences.  Failure to submit this form in a timely fashion may result in
+            delay or denied leave.
+        </b>
+        <div style="height:35px;"></div>
+
+        <div class="col-sm-12 divClassHeader">
+            <div class="col-sm-2" style="margin-left:10px">
+                @Html.Label("Select Employee:", new { @class = "thick" })
+            </div>
+            <div class="col-sm-4">
+                @(Html.Kendo().DropDownList()
+                                .Name("EmployeeName")
+                                .DataTextField("EmployeeName")
+                                .DataValueField("EmployeeID")
+                                .HtmlAttributes(new { style = "height:80%; margin:0px 0px 4px 0px;" })
+                                .DataSource(dataSource =>
+                                    {
+                                        dataSource.Read(read => read.Action("GetEmployeesForDD", "FMLA"))
+                                        .ServerFiltering(true);
+                                    })
+                                .Events(e =>
+                                {
+                                    e.Change("onEmployeeSelect");
+                                })
+
+                )
+            </div>
+            <div class="col-sm-6"></div>
+        </div>
+    </div>
+
+    <div class="row" id="employeeDetailsTable">
+        <div class="col-sm-12">
+            @Html.Partial("~/Views/Shared/_FMLAEmployeeHeaderReadOnly.cshtml", Model)
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    function onEmployeeSelect(e) {
+        var empID = this.value();
+        $("#form1").submit();
+        @*$.getJSON('@Url.Action("GetFMLAEmpDetailsforEmpDD", "FMLA")', { EmployeeID: empID }, function (data) { });*@
+    }
+</script>
+

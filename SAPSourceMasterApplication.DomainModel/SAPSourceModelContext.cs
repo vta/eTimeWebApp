@@ -138,5 +138,25 @@ namespace SAPSourceMasterApplication.DomainModel
                 return internalOrder;
             }
         }
+
+        public int GetEmpIDFromUserID(string userID)
+        {
+            using (var context = new SAPSourceModelContext())
+            {
+                var clientIdParameter = new SqlParameter("@UserID", userID);
+                var result = context.Database.SqlQuery<int>("uspSAPFetchLoggedInUserName @UserId", clientIdParameter).FirstOrDefault();
+                return result;
+            }
+        }
+
+        public SAPEmpQuotaBalance GetEmployeeQuotaBalance(int employeeID)
+        {
+            using (var context = new SAPSourceModelContext())
+            {
+                var clientIdParameter = new SqlParameter("@EmployeeID", employeeID);
+                var result = context.Database.SqlQuery<SAPEmpQuotaBalance>("uspGetEmployeeQuotaBalanceforFMLA @EmployeeID", clientIdParameter).FirstOrDefault();
+                return result;
+            }
+        }
     }
 }
