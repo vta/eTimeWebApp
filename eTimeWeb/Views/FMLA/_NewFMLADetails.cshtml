@@ -1,0 +1,142 @@
+﻿@model eTimeWeb.ViewModels.FMLAEmployeeViewModel
+
+<form id="newFMLADetail">
+    <div class="col-sm-12 divClassHeader">
+        <div style="height:5px;"></div>
+        <div class="row" style="margin-left:10px">
+            <div class="col-sm-2">
+                @Html.Label("FMLA Type:", new { @class = "thick" })
+            </div>
+            <div class="col-sm-4">
+                <input type="radio" name="fmlaTypeRadio" class="fmlaTypeRadio" onchange="HandleFMLATypeRadio()" value="Continuous" /> Continuous
+                <input type="radio" name="fmlaTypeRadio" class="fmlaTypeRadio" onchange="HandleFMLATypeRadio()" value="Intermittent" /> Intermittent
+            </div>
+            <div class="col-sm-2">
+                @Html.Label("Personal Email:", new { @class = "thick" })
+            </div>
+            <div class="col-sm-4">
+                <input class="custom-input" type="text" id="email" name="PersonalEmail" value="" />
+            </div>
+        </div>
+        <div style="height:5px;"></div>
+        <div class="row" style="margin-left:10px">
+            <div class="col-sm-2">
+                @Html.Label("Leave Start Date:", new { @class = "thick" })
+            </div>
+            <div class="col-sm-4">
+                @(Html.Kendo().DatePicker()
+                        .Name("LeaveStartDatepicker")
+                        .Value(DateTime.Today)
+                    //.Events(e => e.Change("OnDateChange"))
+                        .HtmlAttributes(new { style = "width:150px;", @type = "text" }))
+            </div>
+            <div class="col-sm-2">
+                @Html.Label("Mails/Notifications via mail?", new { @class = "thick" })
+            </div>
+            <div class="col-sm-4">
+                <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="mailNotif" name="mailNotif" style="vertical-align:bottom;" value=true>  Yes</label>
+                <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="mailNotif" name="mailNotif" style="vertical-align:bottom;" value=false>  No</label>
+            </div>
+        </div>
+        <div style="height:5px;"></div>
+        <div class="row" style="margin-left:10px">
+            <div class="col-sm-2">
+                @Html.Label("Expected Leave End Date:", new { @class = "thick" })
+            </div>
+            <div class="col-sm-4">
+                @(Html.Kendo().DatePicker()
+                        .Name("LeaveEndDatepicker")
+                        .Value(DateTime.Today)
+                    //.Events(e => e.Change("OnDateChange")).Value(DateTime.Today)
+                        .HtmlAttributes(new { style = "width:150px;", @type = "text" }))
+            </div>
+        </div>
+        <div style="height:5px;"></div>
+        <div class="row" style="margin-left:10px">
+            <div class="col-sm-2">
+                @Html.Label("Avaliable Sick Hours:", new { @class = "thick" })
+            </div>
+            <div class="col-sm-4">
+                <label class="normal" style="width:500px">@Model.QuotaBalance.SickBalance</label>
+            </div>
+            <div class="col-sm-4">
+                @Html.Label("Requested Pay Status (check all that apply):", new { @class = "thick" })
+            </div>
+        </div>
+        <div style="height:5px;"></div>
+        <div class="row" style="margin-left:10px">
+            <div class="col-sm-2">
+                @Html.Label("Avaliable Vacation Hours:", new { @class = "thick" })
+            </div>
+            <div class="col-sm-4">
+                <label class="normal" style="width:500px">@Model.QuotaBalance.VacBalance</label>
+            </div>
+            <div class="col-sm-4">
+                <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' style="vertical-align:bottom;">  Sick</label>
+                <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' style="vertical-align:bottom;">  Vacation</label>
+                <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' style="vertical-align:bottom;">  Unpaid</label>
+            </div>
+        </div>
+        <div style="height:5px;"></div>
+        <div class="row" id="projHrs" style="margin-left:10px">
+            <div class="col-sm-2">
+                @Html.Label("Projected End of 480 Hours Date:", new { @class = "thick" })
+            </div>
+            <div class="col-sm-4">
+                @(Html.Kendo().DatePicker()
+                        .Name("ProjectedEndDatepicker")
+                    //.Value(@Model.FMLARequestDetails.SubmittedDate)
+                    //.Events(e => e.Change("OnDateChange"))
+                        .HtmlAttributes(new { style = "width:150px;", @type = "text" }))
+            </div>
+        </div>
+        <div style="height:5px;"></div>
+        <div class="row" style="margin-left:10px">
+            <div class="col-sm-2">
+                @Html.Label("FMLA Description:", new { @class = "thick" })
+            </div>
+            <div class="col-sm-6">
+                <input class="custom-input" type="text" size="50" id="FMLADesc" name="fmlatextDesc" />
+            </div>
+        </div>
+        <div style="height:5px;"></div>
+        <div class="row" style="margin-left:10px">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6">
+                <input type="submit" value="Proceed" id="btnProceed" class="btn-primary" title="Click to Proceed" onclick="hideProceedButton();" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script type="text/javascript">
+    var hidden = false;
+
+    @*function validateEmail(email) {
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    }*@
+
+    window.onload = function () {
+        var form1 = document.getElementById("newFMLADetail");
+        form1.onsubmit = function () {
+            if (this.mailNotif[1].checked && this.email.value == "") {
+                alert("Please enter a valid email address");
+                this.email.focus();
+                return false;
+            }
+        }
+
+        
+        function hideProceedButton() {
+            hidden = !hidden;
+            if (hidden) {
+                document.getElementById('btnProceed').style.visibility = 'hidden';
+            } else {
+                document.getElementById('btnProceed').style.visibility = 'visible';
+            }
+        }
+    }
+    
+</script>

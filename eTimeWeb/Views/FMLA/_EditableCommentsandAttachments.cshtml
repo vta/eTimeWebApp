@@ -1,0 +1,77 @@
+﻿@model eTimeWeb.ViewModels.FMLAEmployeeViewModel
+<link href="@Url.Content("~/Content/Custom.css")" rel="stylesheet" type="text/css" />
+
+<script>
+    $("#Comment").focusout(function () {
+        if ($(this).val() != null && $(this).val() != '') {
+            $.getJSON('@Url.Action("SaveComment", "FMLA")', { Comment: $(this).val() }, function (data) {
+            });
+        }
+    });
+</script>
+
+<div id="form" class="container-fluid border-box-sizing">
+    <div style="height:20px;"></div>
+    <div class="row">
+        <div class="col-sm-12">
+            @Html.Label("Comments", new { @class = "thick" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            @if (Model.Comment == null)
+            {
+                Model.Comment = string.Empty;
+            }
+            <textarea id="Comment" style="width: 90%;" class="custom-input" maxlength="1000">@Model.Comment</textarea>
+        </div>
+    </div>
+    <div style="height:10px;"></div>
+    <div class="row">
+        <div class="col-sm-12">
+            @Html.Label("Comments History", new { @class = "thick" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12" style="width: 90%;">
+            @(Html.Kendo().Grid<eTimeWeb.ViewModels.CommentsViewModel>()
+                .Name("CommentsGrid")
+                .Columns(columns =>
+                {
+                    columns.Bound(p => p.FMLACommentID).Visible(false);
+                    columns.Bound(p => p.CommentDate).Width(30);
+                    columns.Bound(p => p.Comment).Width(250);
+                    columns.Bound(p => p.CommentBy).Width(30);
+                })
+                        .Sortable()
+                        .Pageable()
+                        .Navigatable()
+                        .AutoBind(true)
+                        .DataSource(dataSource =>
+                                    dataSource.Ajax()
+                                    .PageSize(10)
+                                    .ServerOperation(false)
+                                    .Model(model =>
+                                       {
+                                           model.Id(p => p.FMLACommentID);
+                                       })
+                                    .Read(read => read.Action("Comments_Read", "FMLA"))
+                              ))
+        </div>
+    </div>
+    <div style="height:20px;"></div>
+    <div class="row">
+        <a href="http://www.vta.org/"> <b><i>U.S Department of Labor form</i></b></a>
+    </div>
+    <div style="height:20px;"></div>
+    <div class="row">
+        <div class="col-sm-12">
+            @Html.Label("Attachment: ", new { @class = "thick" })
+
+            <a href="javascript: openWindow('@Url.Action("FMLAUploadFile", "FMLA")', 'Upload Attachment')">
+                Click here to Upload File
+            </a>
+        </div>
+    </div>
+</div> 
+<div style="height:10px;"></div>

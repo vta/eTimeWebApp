@@ -1,0 +1,83 @@
+﻿@model eTimeWeb.ViewModels.FMLAEmployeeViewModel
+
+    <div id="form" class="container-fluid border-box-sizing">
+        <div class="col-sm-12 divClassHeader">
+            <div class="row" style="margin-left:10px">
+                <div class="col-sm-2">
+                    @Html.Label("Employee ID:", new { @class = "thick" })
+                </div>
+                <div class="col-sm-4">
+                    <label class="normal" style="width:500px">@Model.FMLAEmployeeDetails.EmployeeID</label>
+                </div>
+                <div class="col-sm-2">
+                    @Html.Label("Submitted Date:", new { @class = "thick" })
+                </div>
+                <div class="col-sm-4">
+                    @if (Model.FMLAEmployeeDetails.SubmittedDate.HasValue)
+                    {
+                        @Html.Label(@Model.FMLAEmployeeDetails.SubmittedDate.Value.ToString("MM/dd/yyyy"), new { @class = "normal" })
+                    }
+                </div>
+            </div>
+            <div class="row" style="margin-left:10px">
+                <div class="col-sm-2">
+                    @Html.Label("Employee Name:", new { @class = "thick" })
+                </div>
+                <div class="col-sm-4">
+                    <label class="normal" style="width:500px">@Model.FMLAEmployeeDetails.Name</label>
+                </div>
+                <div class="col-sm-2">
+                    @Html.Label("Supervisor Name:", new { @class = "thick" })
+                </div>
+                <div class="col-sm-4">
+                    <label class="normal" style="width:500px">@Model.FMLAEmployeeDetails.SupervisorName</label>
+                </div>
+            </div>
+            <div class="row" style="margin-left:10px">
+                <div class="col-sm-2">
+                    @Html.Label("Title:", new { @class = "thick" })
+                </div>
+                <div class="col-sm-4">
+                    <label class="normal" style="width:500px">@Model.FMLAEmployeeDetails.Title</label>
+                </div>
+                <div class="col-sm-2">
+                    @Html.Label("Division:", new { @class = "thick" })
+                </div>
+                <div class="col-sm-4">
+                    <label class="normal" style="width:500px">@Model.FMLAEmployeeDetails.Division</label>
+                </div>
+            </div>
+            <div class="row" style="margin-left:10px">
+                <div class="col-sm-2">
+                    @Html.Label("Union Affiliation:", new { @class = "thick" })
+                </div>
+                <div class="col-sm-4">
+                    <label class="normal" style="width:500px">@Model.FMLAEmployeeDetails.Union</label>
+                </div>
+                <div class="col-sm-2">
+                    @Html.Label("Cost Center:", new { @class = "thick" })
+                </div>
+                <div class="col-sm-4">
+                    <label class="normal" style="width:500px">@Model.FMLAEmployeeDetails.CostCenterDesc</label>
+                </div>
+            </div>
+            <div class="row" style="margin-left:10px">
+                <div class="col-sm-2">
+                    @Html.Label("Address:", new { @class = "thick" })
+                </div>
+                <div class="col-sm-4">
+                    <label class="normal" style="width:500px">@Model.FMLAEmployeeDetails.Address</label>
+                </div>
+                <div class="col-sm-2">
+                    @Html.Label("Work Schedule:", new { @class = "thick" })
+                </div>
+                <div class="col-sm-4">
+                    <label class="normal" style="width:500px">@Model.FMLAEmployeeDetails.WorkSchedule</label>
+                </div>
+            </div>
+            </div>
+        
+    </div>
+
+
+

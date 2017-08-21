@@ -178,5 +178,78 @@ namespace eTime.DomainModel
                 return null;
                 }
             }
+
+        public FMLAEmployeeProfile GetFMLAEmployeeProfile(int empID)
+        {
+            try
+            {
+                using (var context = new eTimeModelContext())
+                {
+                    var clientIdParameter = new SqlParameter("@empID", empID);
+                    var result = context.Database.SqlQuery<FMLAEmployeeProfile>("uspFMLAWebGetHeaderData @empID", clientIdParameter).FirstOrDefault();
+                    return result;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public List<FMLAEmployeeForDD> GetEmployeesForDD(int empID)
+        {
+            try
+            {
+                using (var context = new eTimeModelContext())
+                {
+                    var clientIdParameter = new SqlParameter("@empID", empID);
+                    var result = context.Database.SqlQuery<FMLAEmployeeForDD>("uspFMLAWebGetEmployeeListForDD @empID", clientIdParameter).ToList<FMLAEmployeeForDD>();
+                    return result;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        //public List<FMLAEmployeeForDD> GetFMLAEmployeeListForDD(int employeeID, string userID)
+        //{
+        //    try
+        //    {
+        //        using (var context = new eTimeModelContext())
+        //        {
+        //            SqlParameter[] sp = new SqlParameter[]
+        //             {
+        //                  new SqlParameter() {ParameterName = "@EmployeeID", SqlDbType = SqlDbType.Int, Value =  employeeID},
+        //                  new SqlParameter() {ParameterName = "@UserID", SqlDbType = SqlDbType.VarChar, Value =  userID},
+                         
+        //             };
+        //            List<FMLAEmployeeForDD> result = context.Database.SqlQuery<FMLAEmployeeForDD>("uspGetEmployeesFMLAForDropDown @EmployeeID,@UserID", sp).ToList<FMLAEmployeeForDD>();
+        //            return result;
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        return null;
+        //    }
+        //}
+
+        public string GetEmpAgreementVerb(string paramName)
+        {
+            try
+            {
+                using (var context = new eTimeModelContext())
+                {
+                    var clientIdParameter = new SqlParameter("@ParamName", paramName);
+                    var result = context.Database.SqlQuery<string>("uspFMLAWebGetEmpAgreementVerb @ParamName", clientIdParameter).FirstOrDefault();
+                    return result;
+                }
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
+}
