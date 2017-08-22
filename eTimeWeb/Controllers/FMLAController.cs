@@ -35,7 +35,7 @@ namespace eTimeWeb.Controllers
         int FMLAID;
 
         [AuthorizationPrivilegeFilter]
-        public ActionResult FMLAMain(string FMLAID, string SN, string status, bool ReadOnly, string SharedUser = "")
+        public ActionResult FMLAMain(string FMLAID, string SN, string status, bool? ReadOnly, string SharedUser = "")
         {
 
             FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
@@ -51,6 +51,8 @@ namespace eTimeWeb.Controllers
                 // Load All Data - Supervisor Review or FMLA Status; Load FMLA/Supervisor sections
                 // Also could be in Employee Revise status - Do not load FMLA/Supervisor Sections
                 // Display entire Form
+                //ViewBag.IsSupervisorOrFMLA = get from Status;
+
                 }
             else if (!String.IsNullOrEmpty(FMLAID)) // Employee Review State
                 {
@@ -66,10 +68,6 @@ namespace eTimeWeb.Controllers
                 // Create New FMLA is clicked
                 Session["FMLAID"] = null;
 
-                // TBD SM ? Ask Roopam
-                //ViewBag.IsSupervisorOrFMLA = false;
-                //var url = HttpContext.Request.Url.ToString();
-
                 string userId = FetchUserName();
                 empID = SAPModel.GetEmpIDFromUserID(userId);
                 }
@@ -81,7 +79,7 @@ namespace eTimeWeb.Controllers
 
             fmlaEmployeeViewModel.QuotaBalance = GetEmployeeHoursBalance(empID);
                 
-            return PartialView("_FMLAMain", fmlaEmployeeViewModel);
+            return View("FMLAMain", fmlaEmployeeViewModel);
 
         }
 
