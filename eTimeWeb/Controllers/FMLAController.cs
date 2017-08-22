@@ -21,22 +21,56 @@ using System.Net;
 using System.Web.Optimization;
 using System.Web.Routing;
 using SAPSourceMasterApplication.DomainModel;
+using log4net;
+using eTimeAutomationWeb;
+
 
 namespace eTimeWeb.Controllers
 {
     public class FMLAController : Controller
     {
-        FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
+        private static readonly log4net.ILog LogManager = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         SAPSourceModelContext SAPModel = new SAPSourceModelContext();
         int FMLAID;
 
-        public ActionResult FMLA()
+        [AuthorizationPrivilegeFilter]
+        public ActionResult FMLAMain(string FMLAID, string SN, string status, bool? ReadOnly, string SharedUser = "")
         {
-            Session["FMLAID"] = null;
-            ViewBag.IsSupervisorOrFMLA = false;
-            var url = HttpContext.Request.Url.ToString();
-            string userId = GetCurrentUserId();
-            int empID = SAPModel.GetEmpIDFromUserID(userId);
+
+            FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
+            int empID = 0;
+            TempData["ReadOnly"] = ReadOnly;
+            if (!String.IsNullOrEmpty(SN))
+                {
+                // Link Opened from Dashboard or email -- Workflow has started
+                int SNIndex = SN.IndexOf('_');
+                string newProcId = SN.Substring(0, SNIndex);
+                //FMLAID = eTimeModelContext.GetFMLAIDFromProcId(Convert.ToInt32(newProcId));
+                Session["FMLAID"] = FMLAID;
+                // Load All Data - Supervisor Review or FMLA Status; Load FMLA/Supervisor sections
+                // Also could be in Employee Revise status - Do not load FMLA/Supervisor Sections
+                // Display entire Form
+                //ViewBag.IsSupervisorOrFMLA = get from Status;
+
+                }
+            else if (!String.IsNullOrEmpty(FMLAID)) // Employee Review State
+                {
+                // Link Opened from Dashboard or email -- Saved Status
+                Session["FMLAID"] = FMLAID;
+                // TBD by Roopam Load All Data based on FMLA ID, including EMPID, etc,
+                empID = 10615;
+                // Load All Data - Employee Saved Status; do not load FMLA/Supervisor sections
+                // Display the Botton Div as well, after the Proceed Button
+                }
+            else
+                {
+                // Create New FMLA is clicked
+                Session["FMLAID"] = null;
+
+                string userId = FetchUserName();
+                empID = SAPModel.GetEmpIDFromUserID(userId);
+                }
             using (var eTimeModelContext = new eTimeModelContext())
             {
                 fmlaEmployeeViewModel.FMLAEmployeeDetails = eTimeModelContext.GetFMLAEmployeeProfile(empID);
@@ -44,7 +78,8 @@ namespace eTimeWeb.Controllers
             }
 
             fmlaEmployeeViewModel.QuotaBalance = GetEmployeeHoursBalance(empID);
-            return PartialView("_FMLAMain", fmlaEmployeeViewModel);
+                
+            return View("FMLAMain", fmlaEmployeeViewModel);
 
         }
 
@@ -81,7 +116,8 @@ namespace eTimeWeb.Controllers
 
         public JsonResult GetEmployeesForDD() //(int empID)
         {
-            string userId = GetCurrentUserId();
+            FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
+            string userId = FetchUserName();
             SAPSourceModelContext SAPModel = new SAPSourceModelContext();
             fmlaEmployeeViewModel.FMLAEmployeeForDD = new List<FMLAEmployeeForDD>();
             //List<FMLAEmployeeForDD> empList = new List<FMLAEmployeeForDD>();
@@ -97,14 +133,15 @@ namespace eTimeWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetFMLAEmpDetailsforEmpDD(FMLAEmployeeViewModel fmlaEmployeeViewModel)
+        public ActionResult GetFMLAEmpDetailsforEmpDD(int EmployeeName) 
         {
-            //FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
+            FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
             using (var eTimeModelContext = new eTimeModelContext())
             {
-                //fmlaEmployeeViewModel.FMLAEmployeeDetails = eTimeModelContext.GetFMLAEmployeeProfile(employeeID);
+            fmlaEmployeeViewModel.FMLAEmployeeDetails = eTimeModelContext.GetFMLAEmployeeProfile(EmployeeName);
             }
             return PartialView("_FMLAEmployeeHeaderReadOnly", fmlaEmployeeViewModel);
+            
         }
 
         public ActionResult Test(string Email)
@@ -123,6 +160,7 @@ namespace eTimeWeb.Controllers
         {
             try
             {
+                FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
                 fmlaEmployeeViewModel.Comment = Comment;
                 TempData["Comment"] = Comment;
                 return Json(Comment, JsonRequestBehavior.AllowGet);
@@ -194,19 +232,47 @@ namespace eTimeWeb.Controllers
             return fsResult;
             }
 
-        private string GetCurrentUserId()
-        {
-                string userId = string.Empty;
-                string loggedInUserId = HttpContext.User.Identity.Name;
-                if (loggedInUserId.Contains('\\'))
+        //private string GetCurrentUserId()
+        //{
+        //        string userId = string.Empty;
+        //        string loggedInUserId = HttpContext.User.Identity.Name;
+        //        if (loggedInUserId.Contains('\\'))
+        //        {
+        //            int index = loggedInUserId.IndexOf('\\');
+        //            userId = loggedInUserId.Substring(index + 1);
+        //        }
+        //        else
+        //            userId = loggedInUserId;
+        //        return userId;
+        //}
+
+        #region Private Methods
+
+        private string FetchUserName()
+            {
+            string userId = string.Empty;
+            try
                 {
-                    int index = loggedInUserId.IndexOf('\\');
-                    userId = loggedInUserId.Substring(index + 1);
-                }
-                else
-                    userId = loggedInUserId;
+                LogManager.Debug("FetchUserName: START");
+                string loggedInUserId = HttpContext.User.Identity.Name.ToString();
+                int index = loggedInUserId.IndexOf('\\');
+                userId = loggedInUserId.Substring(index + 1);
+                using (SAPSourceModelContext context = new SAPSourceModelContext())
+                    {
+                    string userName = context.FetchLoggedInUserName(userId);
+                    Session["LoggedInUserName"] = userName;
+                    }
+                LogManager.Debug("FetchUserName: END");
                 return userId;
-        }
+                }
+
+            catch (Exception ex)
+                {
+                LogManager.Error("FetchUserName: ERROR " + ex.Message, ex);
+                return userId;
+                }
+            }
+        #endregion
     }
 
 

@@ -49,6 +49,7 @@
     <Compile Include="ExchangeEmployeeProfile.cs" />
     <Compile Include="SAPCostCenter.cs" />
     <Compile Include="SAPEmployeeProfile.cs" />
+    <Compile Include="SAPEmpQuotaBalance.cs" />
     <Compile Include="SAPInternalOrder.cs" />
     <Compile Include="SAPPurchaseOrder.cs" />
     <Compile Include="SAPSourceModelContext.cs" />
