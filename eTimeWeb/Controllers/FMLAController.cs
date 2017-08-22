@@ -26,12 +26,13 @@ namespace eTimeWeb.Controllers
 {
     public class FMLAController : Controller
     {
-        FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
+        //FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
         SAPSourceModelContext SAPModel = new SAPSourceModelContext();
         int FMLAID;
 
-        public ActionResult FMLA()
+        public ActionResult Index()
         {
+            FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
             Session["FMLAID"] = null;
             ViewBag.IsSupervisorOrFMLA = false;
             var url = HttpContext.Request.Url.ToString();
@@ -81,6 +82,7 @@ namespace eTimeWeb.Controllers
 
         public JsonResult GetEmployeesForDD() //(int empID)
         {
+            FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
             string userId = GetCurrentUserId();
             SAPSourceModelContext SAPModel = new SAPSourceModelContext();
             fmlaEmployeeViewModel.FMLAEmployeeForDD = new List<FMLAEmployeeForDD>();
@@ -97,14 +99,15 @@ namespace eTimeWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetFMLAEmpDetailsforEmpDD(FMLAEmployeeViewModel fmlaEmployeeViewModel)
+        public ActionResult GetFMLAEmpDetailsforEmpDD(int EmployeeName) //, FMLAEmployeeViewModel fmlaEmployeeViewModel)
         {
-            //FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
+            FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
             using (var eTimeModelContext = new eTimeModelContext())
             {
-                //fmlaEmployeeViewModel.FMLAEmployeeDetails = eTimeModelContext.GetFMLAEmployeeProfile(employeeID);
+            fmlaEmployeeViewModel.FMLAEmployeeDetails = eTimeModelContext.GetFMLAEmployeeProfile(EmployeeName);
             }
             return PartialView("_FMLAEmployeeHeaderReadOnly", fmlaEmployeeViewModel);
+            
         }
 
         public ActionResult Test(string Email)
@@ -123,6 +126,7 @@ namespace eTimeWeb.Controllers
         {
             try
             {
+                FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
                 fmlaEmployeeViewModel.Comment = Comment;
                 TempData["Comment"] = Comment;
                 return Json(Comment, JsonRequestBehavior.AllowGet);

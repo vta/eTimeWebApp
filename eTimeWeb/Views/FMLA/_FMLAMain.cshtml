@@ -8,11 +8,13 @@
 }
 
 
+
+
 @using (Ajax.BeginForm("GetFMLAEmpDetailsforEmpDD", "FMLA", new AjaxOptions()
                                                    {
                                                        HttpMethod = "POST",
                                                        UpdateTargetId = "employeeDetailsTable"
-                                                   }, new { id = "form1" }))
+                                                     }, new { encType = "multipart/form-data", id = "form1" }))
 {
     <div id="form" class="container-fluid border-box-sizing">
         <p><h3 align="center"><b>&nbsp;&nbsp;Family and Medical Leave Act (FMLA) Form</b></h3></p>
@@ -48,23 +50,25 @@
                                 })
 
                 )
+                <input type="hidden" id="EmpID" name="emplID" value="10615"/>
             </div>
             <div class="col-sm-6"></div>
         </div>
     </div>
-
+    }
     <div class="row" id="employeeDetailsTable">
         <div class="col-sm-12">
             @Html.Partial("~/Views/Shared/_FMLAEmployeeHeaderReadOnly.cshtml", Model)
         </div>
     </div>
-}
+
 
 <script type="text/javascript">
     function onEmployeeSelect(e) {
         var empID = this.value();
         $("#form1").submit();
         @*$.getJSON('@Url.Action("GetFMLAEmpDetailsforEmpDD", "FMLA")', { EmployeeID: empID }, function (data) { });*@
+
     }
 </script>
 
