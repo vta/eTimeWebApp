@@ -133,7 +133,7 @@ namespace eTimeWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetFMLAEmpDetailsforEmpDD(int EmployeeName) //, FMLAEmployeeViewModel fmlaEmployeeViewModel)
+        public ActionResult GetFMLAEmpDetailsforEmpDD(int EmployeeName) 
         {
             FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
             using (var eTimeModelContext = new eTimeModelContext())
