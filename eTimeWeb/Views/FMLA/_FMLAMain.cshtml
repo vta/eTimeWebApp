@@ -39,6 +39,7 @@
                                 .DataTextField("EmployeeName")
                                 .DataValueField("EmployeeID")
                                 .HtmlAttributes(new { style = "height:80%; margin:0px 0px 4px 0px;" })
+                                .Value(@Model.FMLAEmployeeDetails.EmployeeID.ToString())
                                 .DataSource(dataSource =>
                                     {
                                         dataSource.Read(read => read.Action("GetEmployeesForDD", "FMLA"))
@@ -50,7 +51,7 @@
                                 })
 
                 )
-                <input type="hidden" id="EmpID" name="emplID" value="10615"/>
+                
             </div>
             <div class="col-sm-6"></div>
         </div>
