@@ -21,7 +21,16 @@ namespace eTimeAutomationWeb
                 string name = String.Empty;
                 base.OnActionExecuting(filterContext);
 
-            
+                //HttpContext ctx = HttpContext.Current;
+                //// check if session has timed out here
+                //if (HttpContext.Current.Session["LoggedInUserName"] == null)
+                //    {
+                //    filterContext.Result = new RedirectResult("~/Home/SessionTimeOut");
+                //    return;
+                //    }
+
+                
+
                 LogManager.Debug("OnActionExecuting: END");
 
             }
