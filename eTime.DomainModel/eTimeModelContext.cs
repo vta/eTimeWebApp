@@ -251,5 +251,25 @@ namespace eTime.DomainModel
                 return null;
             }
         }
+
+        public string CreateNewFMLARecord(string fmlaType, string email, string leaveStartDate, string leaveEndDate,
+                bool mailNotif, string payStatus, int employeeID)
+        {
+            using (var context = new eTimeModelContext())
+            {
+                SqlParameter[] sp = new SqlParameter[]
+                       {
+                           new SqlParameter() {ParameterName = "@FMLAType", SqlDbType = SqlDbType.VarChar, Value= fmlaType},
+                           new SqlParameter() {ParameterName = "@email", SqlDbType = SqlDbType.VarChar, Value =  email},
+                           new SqlParameter() {ParameterName = "@startdate", SqlDbType = SqlDbType.VarChar, Value= leaveStartDate},
+                           new SqlParameter() {ParameterName = "@enddate", SqlDbType = SqlDbType.VarChar, Value =  leaveEndDate},
+                           new SqlParameter() {ParameterName = "@mailNotif", SqlDbType = SqlDbType.Bit, Value= mailNotif},
+                           new SqlParameter() {ParameterName = "@payStatus", SqlDbType = SqlDbType.VarChar, Value =  payStatus},
+                           new SqlParameter() {ParameterName = "@empID", SqlDbType = SqlDbType.Int, Value =  employeeID},
+                       };
+                var result = context.Database.SqlQuery<string>("uspFMLAWebCreateNewFMLA @fmlaType, @email, @startdate, @enddate, @mailNotif, @payStatus, @empID", sp).FirstOrDefault();
+                return result;
+            }
+        }
     }
 }

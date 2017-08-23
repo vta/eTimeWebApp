@@ -56,20 +56,181 @@
             <div class="col-sm-6"></div>
         </div>
     </div>
-    }
+}
+
+
     <div class="row" id="employeeDetailsTable">
         <div class="col-sm-12">
             @Html.Partial("~/Views/Shared/_FMLAEmployeeHeaderReadOnly.cshtml", Model)
         </div>
     </div>
+    
+
+    <div class="col-sm-12 divClassHeader" id="newFMLADetails">
+    <div style="height:5px;"></div>
+    <div class="row" style="margin-left:10px">
+        <div class="col-sm-2">
+            @Html.Label("FMLA Type:", new { @class = "thick" })
+        </div>
+        <div class="col-sm-4">
+            <input type="radio" name="fmlaTypeRadio" class="fmlaTypeRadio" onchange="HandleFMLATypeRadio()" value="Continuous" /> Continuous
+            <input type="radio" name="fmlaTypeRadio" class="fmlaTypeRadio" onchange="HandleFMLATypeRadio()" value="Intermittent" /> Intermittent
+        </div>
+        <div class="col-sm-2">
+            @Html.Label("Personal Email:", new { @class = "thick" })
+        </div>
+        <div class="col-sm-4">
+            <input class="custom-input" type="text" id="email" name="PersonalEmail" value="" />
+        </div>
+    </div>
+    <div style="height:5px;"></div>
+    <div class="row" style="margin-left:10px">
+        <div class="col-sm-2">
+            @Html.Label("Leave Start Date:", new { @class = "thick" })
+        </div>
+        <div class="col-sm-4">
+            @(Html.Kendo().DatePicker()
+                        .Name("LeaveStartDatepicker")
+                        .Value(DateTime.Today)
+                    //.Events(e => e.Change("OnDateChange"))
+                        .HtmlAttributes(new { style = "width:150px;", @type = "text" }))
+        </div>
+        <div class="col-sm-2">
+            @Html.Label("Mails/Notifications via mail?", new { @class = "thick" })
+        </div>
+        <div class="col-sm-4">
+            <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="mailNotif" name="mailNotif" style="vertical-align:bottom;" value=true>  Yes</label>
+            <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="mailNotif" name="mailNotif" style="vertical-align:bottom;" value=false>  No</label>
+        </div>
+    </div>
+    <div style="height:5px;"></div>
+    <div class="row" style="margin-left:10px">
+        <div class="col-sm-2">
+            @Html.Label("Expected Leave End Date:", new { @class = "thick" })
+        </div>
+        <div class="col-sm-4">
+            @(Html.Kendo().DatePicker()
+                        .Name("LeaveEndDatepicker")
+                        .Value(DateTime.Today)
+                    //.Events(e => e.Change("OnDateChange")).Value(DateTime.Today)
+                        .HtmlAttributes(new { style = "width:150px;", @type = "text" }))
+        </div>
+    </div>
+    <div style="height:5px;"></div>
+    <div class="row" style="margin-left:10px">
+        <div class="col-sm-2">
+            @Html.Label("Avaliable Sick Hours:", new { @class = "thick" })
+        </div>
+        <div class="col-sm-4">
+            <label class="normal" style="width:500px">@Model.QuotaBalance.SickBalance</label>
+        </div>
+        <div class="col-sm-4">
+            @Html.Label("Requested Pay Status (check all that apply):", new { @class = "thick" })
+        </div>
+    </div>
+    <div style="height:5px;"></div>
+    <div class="row" style="margin-left:10px">
+        <div class="col-sm-2">
+            @Html.Label("Avaliable Vacation Hours:", new { @class = "thick" })
+        </div>
+        <div class="col-sm-4">
+            <label class="normal" style="width:500px">@Model.QuotaBalance.VacBalance</label>
+        </div>
+        <div class="col-sm-4">
+            <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="payStatusCB" value="Sick"style="vertical-align:bottom;">  Sick</label>
+            <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="payStatusCB" value="Vacation" style="vertical-align:bottom;">  Vacation</label>
+            <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="payStatusCB" value="Unpaid" style="vertical-align:bottom;">  Unpaid</label>
+        </div>
+    </div>
+    <div style="height:5px;"></div>
+    <div class="row" id="projHrs" style="margin-left:10px">
+        <div class="col-sm-2">
+            @Html.Label("Projected End of 480 Hours Date:", new { @class = "thick" })
+        </div>
+        <div class="col-sm-4">
+            @(Html.Kendo().DatePicker()
+                        .Name("ProjectedEndDatepicker")
+                    //.Value(@Model.FMLARequestDetails.SubmittedDate)
+                    //.Events(e => e.Change("OnDateChange"))
+                        .HtmlAttributes(new { style = "width:150px;", @type = "text" }))
+        </div>
+    </div>
+    <div style="height:5px;"></div>
+    <div class="row" style="margin-left:10px">
+        <div class="col-sm-2">
+            @Html.Label("FMLA Description:", new { @class = "thick" })
+        </div>
+        <div class="col-sm-6">
+            <input class="custom-input" type="text" size="50" id="FMLADesc" name="fmlatextDesc" />
+        </div>
+    </div>
+    <div style="height:5px;"></div>
+    <div class="row" style="margin-left:10px">
+        <div class="col-sm-6"></div>
+        <div class="col-sm-6">
+            <input type="submit" value="Proceed" id="btnProceed" class="btn-primary" title="Click to Proceed" />
+            @*onclick="hideProceedButton();"*@
+        </div>
+    </div>
+</div>
 
 
 <script type="text/javascript">
+
     function onEmployeeSelect(e) {
         var empID = this.value();
         $("#form1").submit();
         @*$.getJSON('@Url.Action("GetFMLAEmpDetailsforEmpDD", "FMLA")', { EmployeeID: empID }, function (data) { });*@
 
     }
+
+    function HandleFMLATypeRadio() {
+        var x = document.getElementById('projHrs');
+        if ($(".fmlaTypeRadio:checked").val() === 'Intermittent') {
+            x.style.display = 'none';
+        } else {
+            x.style.display = 'block';
+        }
+    }
+
+    $("input:checkbox").on('click', function () {
+        // in the handler, 'this' refers to the box clicked on
+        var $box = $(this);
+        if ($box.is(":checked")) {
+            var group = "input:checkbox[name='" + $box.attr("name") + "']";
+            $(group).prop("checked", false);
+            $box.prop("checked", true);
+        } else {
+            $box.prop("checked", false);
+        }
+    });
+
+    $('#btnProceed').click(function () {
+        var fmlaType = $('input[name="fmlaTypeRadio"]:checked').val();
+        var email = document.getElementById("email").value;
+        var leaveStartDate = $("#LeaveStartDatepicker").val().toString();
+        var mailNotif = $(".mailNotif:checked").val();
+        var leaveEndDate = $("#LeaveEndDatepicker").val().toString();
+        var payStatus = $(".payStatusCB:checked").map(function () { return this.value }).get().join();
+        var employeeID = $("#EmployeeName").data("kendoDropDownList").value();
+        $.getJSON('@Url.Action("CreateNewFMLA", "FMLA")', {
+            fmlaType: fmlaType, email: email, leaveStartDate: leaveStartDate, leaveEndDate: leaveEndDate,
+            mailNotif: mailNotif, payStatus : payStatus, employeeID: employeeID
+        }, function (data) {
+            if (data == true) {
+                alert(data);
+                $("#btnProceed").attr("disabled", false);
+            }
+        })
+        @*$.ajax({
+            url: '@Url.Action("CreateNewFMLA", "FMLA")',
+            type: 'POST',
+            data: {
+                'fmlaType': fmlaType, 'email': email, 'leaveStartDate': leaveStartDate, 'leaveEndDate': leaveEndDate,
+                'mailNotif': mailNotif, 'payStatus': payStatus, 'employeeID': employeeID
+            }
+        })*@
+
+    });
 </script>
 

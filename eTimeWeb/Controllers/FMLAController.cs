@@ -83,11 +83,7 @@ namespace eTimeWeb.Controllers
 
         }
 
-        [HttpPost]
-        public ActionResult NewFMLA(FMLAEmployeeViewModel fmlaEmployeeViewModel)
-        {
-            return null;
-        }
+        
 
     // GET: FMLA
         //public ActionResult Index()
@@ -144,9 +140,13 @@ namespace eTimeWeb.Controllers
             
         }
 
-        public ActionResult Test(string Email)
+        //[HttpPost]
+        public ActionResult CreateNewFMLA(string fmlaType, string email, string leaveStartDate, string leaveEndDate,
+                bool mailNotif, string payStatus, int employeeID)
         {
-            return null;
+            eTimeModelContext context = new eTimeModelContext();
+            String Result1 = context.CreateNewFMLARecord(fmlaType, email, leaveStartDate, leaveEndDate, mailNotif, payStatus, employeeID);
+            return Json(Result1, JsonRequestBehavior.AllowGet);
         }
 
         public SAPEmpQuotaBalance GetEmployeeHoursBalance(int employeeID)
@@ -273,6 +273,8 @@ namespace eTimeWeb.Controllers
                 }
             }
         #endregion
+
+        public object Result1 { get; set; }
     }
 
 
