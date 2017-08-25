@@ -345,5 +345,47 @@ namespace eTime.DomainModel
                 var result = context.Database.SqlQuery<FMLARequest>("uspFMLAWebSaveOtherMembrAvlablBit @FMLAID,@MemberBit", sp).FirstOrDefault();
             }
         }
+
+        /// <summary>
+        /// 8/25/2017 SM Gets UserID of the Employee if he is configured for RoleName
+        /// </summary>
+        /// <param name="roleabbreviation">Name of the Role</param>
+        /// <param name="InvoiceMasterID">Pass NULL, if Role Name is a Admin role, else pass InvoiceMasterID for which to determine user Authentication </param>
+        /// <returns>UserName if the user is valid for Role Name Passed </returns>
+        public string VerifyUserAccess(string module, int processID, string userID)
+            {
+            try
+                {
+                string message = "";
+                LogManager.Debug("VerifyUserAccess: START");
+                using (var context = new eTimeModelContext())
+                    {
+                    //List<String> assignedUsers = new List<string>();
+                    SqlParameter[] sp = new SqlParameter[]
+               {
+                   new SqlParameter() {ParameterName = "@Module", SqlDbType = SqlDbType.VarChar, Value =  module},
+                   new SqlParameter() {ParameterName = "@ProcessID", SqlDbType = SqlDbType.Int,  Value = processID},
+                   new SqlParameter() {ParameterName = "@userID", SqlDbType = SqlDbType.VarChar,  Value = userID},
+               };
+
+                    // var result = context.Database.SqlQuery<int>("uspWebVerifyAccess @Module, @ProcessID", sp).FirstOrDefault();
+
+                    var result = context.Database.SqlQuery<VerifyUser>("uspWebVerifyAccess @Module, @ProcessID, @UserID", sp).ToList<VerifyUser>();
+                    if (result.Count > 0)
+                        {
+                        foreach (VerifyUser role in result)
+                            message = role.ValidationMessage;
+                        //assignedUsers.Add(role.Approver);
+                        }
+                    return message;
+                    }
+                }
+            catch (Exception ex)
+                {
+                LogManager.Error("VerifyUserAccess: ERROR " + ex.Message, ex);
+                return null;
+                }
+            }
+            
     }
 }
