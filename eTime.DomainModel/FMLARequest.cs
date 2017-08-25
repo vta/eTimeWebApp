@@ -37,8 +37,11 @@ namespace eTime.DomainModel
         [StringLength(50)]
         public string FMLAReason { get; set; }
 
-        [StringLength(200)]
+        [StringLength(50)]
         public string FMLADescription { get; set; }
+
+        [StringLength(200)]
+        public string FMLADescriptionBody { get; set; }
 
         [StringLength(200)]
         public string EmployeePersonalEmail { get; set; }

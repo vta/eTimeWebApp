@@ -7,7 +7,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
+<script>
+    
+</script>
 
 
 @using (Ajax.BeginForm("GetFMLAEmpDetailsforEmpDD", "FMLA", new AjaxOptions()
@@ -95,6 +97,7 @@
             @(Html.Kendo().DatePicker()
                         .Name("LeaveStartDatepicker")
                         .Value(DateTime.Today)
+                        .Format("MM/dd/yyyy")
                         .Events(e => e.Change("OnDateChange"))
                         .HtmlAttributes(new { style = "width:150px;", @type = "text" }))
         </div>
@@ -151,11 +154,12 @@
             @Html.Label("Projected End of 480 Hours Date:", new { @class = "thick" })
         </div>
         <div class="col-sm-4">
-            @(Html.Kendo().DatePicker()
+            <input type="text" value="" id="populateOnLeaveSD" name="populateOnLeaveSD" disabled="disabled" />
+            @*@(Html.Kendo().DatePicker()
                         .Name("ProjectedEndDatepicker")
                     //.Value(@Model.FMLARequestDetails.SubmittedDate)
                     //.Events(e => e.Change("OnDateChange"))
-                        .HtmlAttributes(new { style = "width:150px;", @type = "text" }))
+                        .HtmlAttributes(new { style = "width:150px;", @type = "text" }))*@
         </div>
     </div>
     <div style="height:5px;"></div>
@@ -244,14 +248,14 @@
                     @Html.Label("Include age if it is for your child:", new { @class = "thick" })
                 </div>
                 <div class="col-sm-4">
-                    <input class="custom-input" type="text" id="childAge" name="ChildAge" value="" />
+                    <input class="custom-input" type="number" id="childAge" name="ChildAge" value="" />
                 </div>
                 <div class="col-sm-2">
                     @Html.Label("Other family member available for care?", new { @class = "thick" })
                 </div>
                 <div class="col-sm-4">
-                    <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' style="vertical-align:bottom;">  Yes</label>
-                    <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' style="vertical-align:bottom;">  No</label>
+                    <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="famMbrAvlble" name="famMbrAvlble" style="vertical-align:bottom;" value=true>  Yes</label>
+                    <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="famMbrAvlble" name="famMbrAvlble" style="vertical-align:bottom;" value=false>  No</label>
                 </div>
             </div>
         </div>
@@ -293,6 +297,10 @@
         var endPicker = $("#LeaveEndDatepicker").data("kendoDatePicker");
         startDate = this.value();
         endPicker.value(startDate);
+        //var projectedDate1 = startDate.setDate(startDate.getDate() +14);
+        var projectedDate = kendo.toString(kendo.parseDate(startDate), 'MM/dd/yyyy');
+
+        document.getElementById('populateOnLeaveSD').value = projectedDate
     }
 
     function onEmployeeSelect(e) {
@@ -399,11 +407,55 @@
                 else if (data != "Insert Successful") {
                     $("#btnProceed").attr("disabled", false);
                     alert(data);
+                    document.getElementById('FMLArequestDetailOptions').style.display = 'block';
+                    document.getElementById('CommentsArea').style.display = 'block'
                     return false;
                 }
             }
         })
 
+    });
+
+    $('.fmlaReason').click(function () {
+        var reason = $(this).val();
+        $.getJSON('@Url.Action("SaveFMLAReason", "FMLA")', { FMLAReason: reason }, function (data) { });
+    });
+
+    $("#memberName").focusout(function () {
+        if ($(this).val() != null) {
+            $.getJSON('@Url.Action("SaveMemberName", "FMLA")', { MemberName: $(this).val() }, function (data) {
+            });
+        }
+    });
+
+    $("#relationship").focusout(function () {
+        if ($(this).val() != null) {
+            $.getJSON('@Url.Action("SaveMemberRelationship", "FMLA")', { Relationship: $(this).val() }, function (data) {
+            });
+        }
+    });
+
+    $("#childAge").focusout(function () {
+        if ($(this).val() != null) {
+            $.getJSON('@Url.Action("SaveChildAge", "FMLA")', { ChildAge: $(this).val() }, function (data) {
+            });
+        }
+    });
+
+    $('.famMbrAvlble').click(function () {
+        var famMembr = $(this).val();
+        alert(famMembr);
+        $.getJSON('@Url.Action("SaveOtherMembrAvlable", "FMLA")', { FamMembr: famMembr }, function (data) { });
+    });
+
+    $('.regPartner').click(function () {
+        var famMembr = $(this).val();
+        $.getJSON('@Url.Action("SaveIsSpouseRegisteredEmp", "FMLA")', { RegEmp: famMembr }, function (data) { });
+    }); 
+
+    $('.partnerLeave').click(function () {
+        var famMembr = $(this).val();
+        $.getJSON('@Url.Action("SaveOtherMembrAvlable", "FMLA")', { FamMembr: famMembr }, function (data) { });
     });
 </script>
 
