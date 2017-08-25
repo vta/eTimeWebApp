@@ -167,9 +167,18 @@
         <div class="col-sm-2">
             @Html.Label("FMLA Description:", new { @class = "thick" })
         </div>
+        @*<div class="col-sm-4">
+            <label class="normal" style="width:500px">@Model.FMLARequestDetails.FMLADescription</label>
+        </div>*@
         <div class="col-sm-6">
-            <input class="custom-input" type="text" size="50" id="FMLADesc" name="fmlatextDesc" style="width: 125px;" />@*value="@Model.FMLARequestDetails.FMLADescription"*@
-            <input class="custom-input" type="text" size="50" id="FMLADescBody" name="fmlatextDesc" style="width: 250px;" value="" />
+            @*@if (Model.FMLARequestDetails == null)
+            {
+                Model.FMLARequestDetails.FMLADescription = string.Empty;
+                Model.FMLARequestDetails.FMLADescriptionBody = string.Empty;
+            }*@
+            <input class="custom-input" type="text" size="50" id="FMLADesc" name="fmlatextDesc" style="width: 125px;" />@*value="@Model.FMLARequestDetails.FMLADescription" *@
+            <input class="custom-input" type="text" size="50" id="FMLADescBody" name="fmlatextDesc" style="width: 250px;" />@*value=@Model.FMLARequestDetails.FMLADescriptionBody *@
+            
         </div>
     </div>
     <div style="height:5px;"></div>
@@ -263,12 +272,29 @@
             <div class="col-sm-3">
                 @Html.Label("Is spouse/registered partner employed by VTA?", new { @class = "thick" })
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-3">
                 <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="regPartner" name="regPartner" style="vertical-align:bottom;" value=true>  Yes</label>
                 <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="regPartner" name="regPartner" style="vertical-align:bottom;" value=false>  No</label>
             </div>
-            <div class="col-sm-1">
+            <div class="col-sm-2">
                 @Html.Label("Name:", new { @class = "thick" })
+            </div>
+            <div class="col-sm-4">
+                @(Html.Kendo().DropDownList()
+                                .Name("SpouseEmployeeName")
+                                .DataTextField("EmployeeName")
+                                .DataValueField("EmployeeID")
+                                .Filter("contains")
+                                .HtmlAttributes(new { style = "height:80%; margin:0px 0px 4px 0px;" })
+                                .OptionLabel("- please select -")
+                                .Value(@Model.FMLAEmployeeDetails.EmployeeID.ToString())
+                                .DataSource(dataSource =>
+                                    {
+                                        dataSource.Read(read => read.Action("GetEmployeesForDD", "FMLA"))
+                                        .ServerFiltering(true);
+                                    })
+
+                )
             </div>
         </div>
         <div style="height:5px;"></div>
@@ -407,8 +433,6 @@
                 else if (data != "Insert Successful") {
                     $("#btnProceed").attr("disabled", false);
                     alert(data);
-                    document.getElementById('FMLArequestDetailOptions').style.display = 'block';
-                    document.getElementById('CommentsArea').style.display = 'block'
                     return false;
                 }
             }
@@ -449,13 +473,13 @@
     });
 
     $('.regPartner').click(function () {
-        var famMembr = $(this).val();
-        $.getJSON('@Url.Action("SaveIsSpouseRegisteredEmp", "FMLA")', { RegEmp: famMembr }, function (data) { });
+        var regPartner = $(this).val();
+        $.getJSON('@Url.Action("SaveIsSpouseRegisteredEmp", "FMLA")', { RegEmp: regPartner }, function (data) { });
     }); 
 
-    $('.partnerLeave').click(function () {
+    @*$('.partnerLeave').click(function () {
         var famMembr = $(this).val();
         $.getJSON('@Url.Action("SaveOtherMembrAvlable", "FMLA")', { FamMembr: famMembr }, function (data) { });
-    });
+    });*@
 </script>
 

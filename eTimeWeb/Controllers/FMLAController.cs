@@ -37,10 +37,11 @@ namespace eTimeWeb.Controllers
         //[AuthorizationPrivilegeFilter]
         public ActionResult FMLAMain(string FMLAID, string SN, string status, bool? ReadOnly, string SharedUser = "")
         {
-
-            FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
+            
             int empID = 0;
+            int fmlaID = 0;
             TempData["ReadOnly"] = ReadOnly;
+            FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
             if (!String.IsNullOrEmpty(SN))
                 {
                 // Link Opened from Dashboard or email -- Workflow has started
@@ -67,7 +68,8 @@ namespace eTimeWeb.Controllers
                 {
                 // Create New FMLA is clicked
                 //RS TBD Populate FMLADetails with Temp data
-                Session["FMLAID"] = null;
+                //TempData["FMLADescription"] = fmlaEmployeeViewModel.FMLARequestDetails.FMLADescription;
+                    Session["FMLAID"] = null;
 
                 string userId = FetchUserName();
                 empID = SAPModel.GetEmpIDFromUserID(userId);
@@ -76,9 +78,12 @@ namespace eTimeWeb.Controllers
             {
                 fmlaEmployeeViewModel.FMLAEmployeeDetails = eTimeModelContext.GetFMLAEmployeeProfile(empID);
                 fmlaEmployeeViewModel.EmpAgreementVerbiage = eTimeModelContext.GetEmpAgreementVerb("FMLAAgreementVerbiage");
+                //
+                fmlaEmployeeViewModel.FMLARequestDetails = eTimeModelContext.GetFMLADetails(fmlaID);
             }
 
             fmlaEmployeeViewModel.QuotaBalance = GetEmployeeHoursBalance(empID);
+            
                 
             return View("FMLAMain", fmlaEmployeeViewModel);
 
@@ -145,6 +150,8 @@ namespace eTimeWeb.Controllers
         public ActionResult CreateNewFMLA(string fmlaType, string email, string leaveStartDate, string leaveEndDate,
                 bool mailNotif, string payStatus, int employeeID)
         {
+            //
+            FMLAEmployeeViewModel fmlaEmployeeViewModel = new FMLAEmployeeViewModel();
             eTimeModelContext context = new eTimeModelContext();
             String Result1 = context.CreateNewFMLARecord(fmlaType, email, leaveStartDate, leaveEndDate, mailNotif, payStatus, employeeID);
             if (Result1 != "Insert Successful")
@@ -152,7 +159,8 @@ namespace eTimeWeb.Controllers
                 return Content(Result1);
             }
             else
-            return Json(Result1, JsonRequestBehavior.AllowGet);
+
+                return Json(Result1, JsonRequestBehavior.AllowGet);
         }
 
         public SAPEmpQuotaBalance GetEmployeeHoursBalance(int employeeID)
@@ -190,33 +198,6 @@ namespace eTimeWeb.Controllers
             }
         }
 
-        //private void SaveInvoiceComments()
-        //{
-        //    try
-        //    {
-        //        string comment = String.Empty;
-        //        using (var context = new eTimeModelContext())
-        //        {
-        //            if (TempData["Comment"] != null)
-        //            {
-        //                comment = TempData["Comment"].ToString();
-        //                var fmlaComment = new FMLAComment
-        //                {
-        //                    FMLAID = ,
-        //                    CommentDate = DateTime.Now,
-        //                    Comment = comment,
-        //                    CommentBy = HttpContext.User.Identity.Name
-        //                };
-        //                var result = context.;
-        //            }
-        //        }
-        //    }
-
-        //    catch (Exception ex)
-        //    {
-        //        return null;
-        //    }
-        //}
 
         public ActionResult GetDashPdf()
             {
@@ -238,20 +219,86 @@ namespace eTimeWeb.Controllers
             return fsResult;
             }
 
-        //private string GetCurrentUserId()
-        //{
-        //        string userId = string.Empty;
-        //        string loggedInUserId = HttpContext.User.Identity.Name;
-        //        if (loggedInUserId.Contains('\\'))
-        //        {
-        //            int index = loggedInUserId.IndexOf('\\');
-        //            userId = loggedInUserId.Substring(index + 1);
-        //        }
-        //        else
-        //            userId = loggedInUserId;
-        //        return userId;
-        //}
+        public JsonResult SaveFMLAReason(string FMLAReason)
+        {
+            using (eTimeModelContext context = new eTimeModelContext())
+            {
+                //if (Session["FMLAID"] != null)
+                //    FMLAID = Convert.ToInt32(Session["FMLAID"]);
+                FMLAID = 10;
+                context.SaveFMLAReasonCode(FMLAID, FMLAReason);
+            }
+            return Json(FMLAReason, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult SaveMemberName(string MemberName)
+        {
+            try
+            {
+                using (eTimeModelContext context = new eTimeModelContext())
+                {
+                    //if (Session["FMLAID"] != null)
+                    //    FMLAID = Convert.ToInt32(Session["FMLAID"]);
+                    FMLAID = 10;
+                    context.SaveFMLACareMemberName(FMLAID, MemberName);
+                }
+                return Json(MemberName, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
+        public JsonResult SaveMemberRelationship(string Relationship)
+        {
+            try
+            {
+                using (eTimeModelContext context = new eTimeModelContext())
+                {
+                    //if (Session["FMLAID"] != null)
+                    //    FMLAID = Convert.ToInt32(Session["FMLAID"]);
+                    FMLAID = 10;
+                    context.SaveFMLACareMemberRelationship(FMLAID, Relationship);
+                }
+                return Json(Relationship, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public JsonResult SaveChildAge(int ChildAge)
+        {
+            try
+            {
+                using (eTimeModelContext context = new eTimeModelContext())
+                {
+                    //if (Session["FMLAID"] != null)
+                    //    FMLAID = Convert.ToInt32(Session["FMLAID"]);
+                    FMLAID = 10;
+                    context.SaveFMLACareChildAge(FMLAID, ChildAge);
+                }
+                return Json(ChildAge, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public JsonResult SaveOtherMembrAvlable(bool FamMembr)
+        {
+            using (eTimeModelContext context = new eTimeModelContext())
+            {
+                //if (Session["FMLAID"] != null)
+                //    FMLAID = Convert.ToInt32(Session["FMLAID"]);
+                FMLAID = 16;
+                context.SaveFMLOtherMembrAvlablBit(FMLAID, Convert.ToBoolean(FamMembr));
+            }
+            return Json(FamMembr, JsonRequestBehavior.AllowGet);
+        }
+        
         #region Private Methods
 
         private string FetchUserName()
@@ -278,6 +325,7 @@ namespace eTimeWeb.Controllers
                 return userId;
                 }
             }
+        
         #endregion
 
         public object Result1 { get; set; }

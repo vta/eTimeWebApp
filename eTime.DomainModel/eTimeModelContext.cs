@@ -345,5 +345,16 @@ namespace eTime.DomainModel
                 var result = context.Database.SqlQuery<FMLARequest>("uspFMLAWebSaveOtherMembrAvlablBit @FMLAID,@MemberBit", sp).FirstOrDefault();
             }
         }
+
+        //Roopam S method to initialize fmlarequest details
+        public FMLARequest GetFMLADetails(int fmlaID) 
+        {
+            using (eTimeModelContext context = new eTimeModelContext())
+            {
+                var clientIdParameter = new SqlParameter("@FMLAID", fmlaID);
+                var result = context.Database.SqlQuery<FMLARequest>("uspFMLAWebGetFMLARequestData @FMLAID", clientIdParameter).FirstOrDefault();
+                return result;
+            }
+        }
     }
 }
