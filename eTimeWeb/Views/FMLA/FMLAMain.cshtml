@@ -7,7 +7,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
+<script>
+    
+</script>
 
 
 @using (Ajax.BeginForm("GetFMLAEmpDetailsforEmpDD", "FMLA", new AjaxOptions()
@@ -29,12 +31,14 @@
         </b>
         <div style="height:35px;"></div>
 
-        <div class="col-sm-12 divClassHeader">
-            <div class="col-sm-2" style="margin-left:10px">
-                @Html.Label("Select Employee:", new { @class = "thick" })
-            </div>
-            <div class="col-sm-4">
-                @(Html.Kendo().DropDownList()
+        <div class="row">
+            <div style="height:5px;"></div>
+            <div class="col-sm-12 divClassHeader">
+                <div class="col-sm-2" style="margin-left:10px">
+                    @Html.Label("Select Employee:", new { @class = "thick" })
+                </div>
+                <div class="col-sm-4">
+                    @(Html.Kendo().DropDownList()
                                 .Name("EmployeeName")
                                 .DataTextField("EmployeeName")
                                 .DataValueField("EmployeeID")
@@ -50,10 +54,11 @@
                                     e.Change("onEmployeeSelect");
                                 })
 
-                )
-                
+                    )
+
+                </div>
+                <div class="col-sm-6"></div>
             </div>
-            <div class="col-sm-6"></div>
         </div>
     </div>
 }
@@ -92,15 +97,16 @@
             @(Html.Kendo().DatePicker()
                         .Name("LeaveStartDatepicker")
                         .Value(DateTime.Today)
-                    //.Events(e => e.Change("OnDateChange"))
+                        .Format("MM/dd/yyyy")
+                        .Events(e => e.Change("OnDateChange"))
                         .HtmlAttributes(new { style = "width:150px;", @type = "text" }))
         </div>
         <div class="col-sm-2">
             @Html.Label("Mails/Notifications via mail?", new { @class = "thick" })
         </div>
         <div class="col-sm-4">
-            <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="mailNotif" name="mailNotif" style="vertical-align:bottom;" value=true>  Yes</label>
-            <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="mailNotif" name="mailNotif" style="vertical-align:bottom;" value=false>  No</label>
+            <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="mailNotif" name="mailNotif" id="mailNotifY" style="vertical-align:bottom;" value=true>  Yes</label>
+            <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="mailNotif" name="mailNotif" id="mailNotifN"  style="vertical-align:bottom;" value=false>  No</label>
         </div>
     </div>
     <div style="height:5px;"></div>
@@ -137,7 +143,7 @@
             <label class="normal" style="width:500px">@Model.QuotaBalance.VacBalance</label>
         </div>
         <div class="col-sm-4">
-            <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="payStatusCB" value="Sick"style="vertical-align:bottom;">  Sick</label>
+            <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="payStatusCB" value="Sick" style="vertical-align:bottom;">  Sick</label>
             <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="payStatusCB" value="Vacation" style="vertical-align:bottom;">  Vacation</label>
             <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="payStatusCB" value="Unpaid" style="vertical-align:bottom;">  Unpaid</label>
         </div>
@@ -148,34 +154,154 @@
             @Html.Label("Projected End of 480 Hours Date:", new { @class = "thick" })
         </div>
         <div class="col-sm-4">
-            @(Html.Kendo().DatePicker()
+            <input type="text" value="" id="populateOnLeaveSD" name="populateOnLeaveSD" disabled="disabled" />
+            @*@(Html.Kendo().DatePicker()
                         .Name("ProjectedEndDatepicker")
                     //.Value(@Model.FMLARequestDetails.SubmittedDate)
                     //.Events(e => e.Change("OnDateChange"))
-                        .HtmlAttributes(new { style = "width:150px;", @type = "text" }))
+                        .HtmlAttributes(new { style = "width:150px;", @type = "text" }))*@
         </div>
     </div>
     <div style="height:5px;"></div>
-    <div class="row" style="margin-left:10px">
+    <div class="row" style="margin-left:10px; display:none" id="fmlaDescription">
         <div class="col-sm-2">
             @Html.Label("FMLA Description:", new { @class = "thick" })
         </div>
         <div class="col-sm-6">
-            <input class="custom-input" type="text" size="50" id="FMLADesc" name="fmlatextDesc" />
+            <input class="custom-input" type="text" size="50" id="FMLADesc" name="fmlatextDesc" style="width: 125px;" />@*value="@Model.FMLARequestDetails.FMLADescription"*@
+            <input class="custom-input" type="text" size="50" id="FMLADescBody" name="fmlatextDesc" style="width: 250px;" value="" />
         </div>
     </div>
     <div style="height:5px;"></div>
     <div class="row" style="margin-left:10px">
         <div class="col-sm-6"></div>
-        <div class="col-sm-6">
-            <input type="submit" value="Proceed" id="btnProceed" class="btn-primary" title="Click to Proceed" />
-            @*onclick="hideProceedButton();"*@
+            <div class="col-sm-6">
+                <input type="submit" value="Proceed" id="btnProceed" class="btn-primary" title="Click to Proceed" />
+                @*onclick="hideProceedButton();"*@
+            </div>
+        </div>
+</div>
+
+    <div class="col-sm-12 divClassHeader" id="FMLArequestDetailOptions" style="margin-left:5px;display:none">
+        <div style="height:5px;"></div>
+        <div class="row" style="margin-left:10px">
+            <div class="col-sm-12">
+                <p><b>I hereby request family/medical leave for the following reason:</b></p>
+                @*@Html.Label("I hereby request family/medical leave for the following reason:", new { @class = "thick" })*@
+            </div>
+        </div>
+        <div class="row" style="margin-left:10px">
+            <div class="col-sm-12">
+                <input type='checkbox' class="fmlaReason" name="fmlaReason" id="childBirthOption" style="vertical-align:bottom;" value="childbirth">  Childbirth/Adoption/Foster Care
+            </div>
+        </div>
+        <div style="height:5px;"></div>
+        <div class="childBirthDetails" id="childBirthDetails" style="margin-left:30px">
+            <p>
+                For the birth of my child, or the birth of my registered domestic partner’s child, or placement of a child with me for adoption or foster care.<br />
+                <i> (submit proof of birth, adoption, or foster care) </i>
+            </p>
+            <div class="col-sm-3">
+                @Html.Label("Anticipated Date of birth or placement:", new { @class = "thick" })
+            </div>
+            <div class="col-sm-4">
+                @(Html.Kendo().DatePicker()
+                    .Name("BirthPlcmtDatepicker")
+                        //.Value(@Model.FMLARequestDetails.SubmittedDate)
+                        //.Events(e => e.Change("OnDateChange"))
+                    .HtmlAttributes(new { style = "width:150px;", @type = "text" }))
+            </div>
+        </div>
+        <div style="height:5px;"></div>
+        <div class="healthCondn" style="margin-left:10px">
+            <div class="col-sm-12">
+                <input type='checkbox' class="fmlaReason" name="fmlaReason" id="healthCondn" style="vertical-align:bottom;" value="healthCondition">  For my own serious health condition (including recovery from my own illness, injury,
+                pregnancy, or childbirth) which makes me unable to perform the essential functions of my job. (Submit FMLA Medical form).
+            </div>
+        </div>
+        <div style="height:5px;"></div>
+        <div class="row" style="margin-left:10px">
+            <div class="col-sm-12">
+                <input type='checkbox' class="fmlaReason" name="fmlaReason" id="familyCare" style="vertical-align:bottom;" value="familyCare">  To take care of family member with seious health condition
+                (Submit FMLA Medical Certification form)
+            </div>
+        </div>
+        <div style="height:5px;"></div>
+        <div class="familyCareDetails" id="familyCareDetails" style=" margin-left:30px">
+            <div class="row" style="margin-left:10px">
+                <div class="col-sm-2">
+                    @Html.Label("Family Member Name:", new { @class = "thick" })
+                </div>
+                <div class="col-sm-4">
+                    <input class="custom-input" type="text" id="memberName" name="MemberName" value="" />
+                </div>
+                <div class="col-sm-2">
+                    @Html.Label("Relationship:", new { @class = "thick" })
+                </div>
+                <div class="col-sm-4">
+                    <input class="custom-input" type="text" id="relationship" name="Relationship" value="" />
+                </div>
+            </div>
+            <div style="height:5px;"></div>
+            <div class="row" style="margin-left:10px">
+                <div class="col-sm-2">
+                    @Html.Label("Include age if it is for your child:", new { @class = "thick" })
+                </div>
+                <div class="col-sm-4">
+                    <input class="custom-input" type="number" id="childAge" name="ChildAge" value="" />
+                </div>
+                <div class="col-sm-2">
+                    @Html.Label("Other family member available for care?", new { @class = "thick" })
+                </div>
+                <div class="col-sm-4">
+                    <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="famMbrAvlble" name="famMbrAvlble" style="vertical-align:bottom;" value=true>  Yes</label>
+                    <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="famMbrAvlble" name="famMbrAvlble" style="vertical-align:bottom;" value=false>  No</label>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-left:10px">
+            <div class="col-sm-3">
+                @Html.Label("Is spouse/registered partner employed by VTA?", new { @class = "thick" })
+            </div>
+            <div class="col-sm-2">
+                <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="regPartner" name="regPartner" style="vertical-align:bottom;" value=true>  Yes</label>
+                <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="regPartner" name="regPartner" style="vertical-align:bottom;" value=false>  No</label>
+            </div>
+            <div class="col-sm-1">
+                @Html.Label("Name:", new { @class = "thick" })
+            </div>
+        </div>
+        <div style="height:5px;"></div>
+        <div class="row" style="margin-left:10px">
+            <div class="col-sm-3">
+                @Html.Label("Is spouse/registered partner also requesting leave?", new { @class = "thick" })
+            </div>
+            <div class="col-sm-2">
+                <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="partnerLeave" name="partnerLeave" style="vertical-align:bottom;" value=true>  Yes</label>
+                <label style="vertical-align:middle;font-weight:bold;line-height:15px"><input type='checkbox' class="partnerLeave" name="partnerLeave" style="vertical-align:bottom;" value=false>  No</label>
+            </div>
         </div>
     </div>
-</div>
+
+    <div class="row" id="CommentsArea" style="display:none">
+        <div class=" col-sm-12" style="margin-left:30px">
+            @Html.Partial("~/Views/FMLA/_EditableCommentsandAttachments.cshtml", Model)
+        </div>
+    </div> 
+
 
 
 <script type="text/javascript">
+
+    function OnDateChange(e) {
+        var endPicker = $("#LeaveEndDatepicker").data("kendoDatePicker");
+        startDate = this.value();
+        endPicker.value(startDate);
+        //var projectedDate1 = startDate.setDate(startDate.getDate() +14);
+        var projectedDate = kendo.toString(kendo.parseDate(startDate), 'MM/dd/yyyy');
+
+        document.getElementById('populateOnLeaveSD').value = projectedDate
+    }
 
     function onEmployeeSelect(e) {
         var empID = this.value();
@@ -194,7 +320,6 @@
     }
 
     $("input:checkbox").on('click', function () {
-        // in the handler, 'this' refers to the box clicked on
         var $box = $(this);
         if ($box.is(":checked")) {
             var group = "input:checkbox[name='" + $box.attr("name") + "']";
@@ -205,7 +330,50 @@
         }
     });
 
+    function validateEmail(email) {
+        var re = /^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        return re.test(email);
+    }
+
     $('#btnProceed').click(function () {
+
+        if ($('input[name=fmlaTypeRadio]:checked').length <= 0) {
+            alert("Please select FMLA type.");
+            return false;
+        }
+
+        if (!document.getElementById('mailNotifY').checked && !document.getElementById('mailNotifN').checked) {
+            alert("Please indicate mail notification option.");
+            return false;
+        }
+
+        var cbValue = document.getElementById('mailNotifN');
+        if ($('#mailNotifN').is(':checked') && document.getElementById('email').value == '') {
+            alert("Please enter email address if you don't wish to recieve mails/notification via postal mail.");
+            return false;
+        }
+        else if ($('#mailNotifN').is(':checked') && document.getElementById('email').value != '') {
+            var email = $("#email").val();
+            if (!validateEmail(email)) {
+                alert('Please enter valid email address.');
+                return false;
+            }
+        }
+
+
+        var chk = document.getElementsByClassName('payStatusCB');
+        var isChkd = false;
+        for (var i = 0; i < chk.length; i++) {
+            if (chk[i].checked) {
+                isChkd = true;
+                break;
+            }
+        }
+        if (isChkd == false) {
+            alert("Please specify requested Pay status.");
+            return false;
+        }
+
         var fmlaType = $('input[name="fmlaTypeRadio"]:checked').val();
         var email = document.getElementById("email").value;
         var leaveStartDate = $("#LeaveStartDatepicker").val().toString();
@@ -213,7 +381,7 @@
         var leaveEndDate = $("#LeaveEndDatepicker").val().toString();
         var payStatus = $(".payStatusCB:checked").map(function () { return this.value }).get().join();
         var employeeID = $("#EmployeeName").data("kendoDropDownList").value();
-        $.getJSON('@Url.Action("CreateNewFMLA", "FMLA")', {
+        @*$.getJSON('@Url.Action("CreateNewFMLA", "FMLA")', {
             fmlaType: fmlaType, email: email, leaveStartDate: leaveStartDate, leaveEndDate: leaveEndDate,
             mailNotif: mailNotif, payStatus : payStatus, employeeID: employeeID
         }, function (data) {
@@ -221,16 +389,73 @@
                 alert(data);
                 $("#btnProceed").attr("disabled", false);
             }
-        })
-        @*$.ajax({
+        })*@
+        $.ajax({
             url: '@Url.Action("CreateNewFMLA", "FMLA")',
             type: 'POST',
             data: {
                 'fmlaType': fmlaType, 'email': email, 'leaveStartDate': leaveStartDate, 'leaveEndDate': leaveEndDate,
                 'mailNotif': mailNotif, 'payStatus': payStatus, 'employeeID': employeeID
+            },
+            success: function (data) {
+                if (data == "Insert Successful") {
+                    document.getElementById('btnProceed').style.visibility = 'hidden';
+                    document.getElementById('fmlaDescription').style.display = 'block';
+                    document.getElementById('FMLArequestDetailOptions').style.display = 'block';
+                    document.getElementById('CommentsArea').style.display = 'block'
+                }
+                else if (data != "Insert Successful") {
+                    $("#btnProceed").attr("disabled", false);
+                    alert(data);
+                    document.getElementById('FMLArequestDetailOptions').style.display = 'block';
+                    document.getElementById('CommentsArea').style.display = 'block'
+                    return false;
+                }
             }
-        })*@
+        })
 
+    });
+
+    $('.fmlaReason').click(function () {
+        var reason = $(this).val();
+        $.getJSON('@Url.Action("SaveFMLAReason", "FMLA")', { FMLAReason: reason }, function (data) { });
+    });
+
+    $("#memberName").focusout(function () {
+        if ($(this).val() != null) {
+            $.getJSON('@Url.Action("SaveMemberName", "FMLA")', { MemberName: $(this).val() }, function (data) {
+            });
+        }
+    });
+
+    $("#relationship").focusout(function () {
+        if ($(this).val() != null) {
+            $.getJSON('@Url.Action("SaveMemberRelationship", "FMLA")', { Relationship: $(this).val() }, function (data) {
+            });
+        }
+    });
+
+    $("#childAge").focusout(function () {
+        if ($(this).val() != null) {
+            $.getJSON('@Url.Action("SaveChildAge", "FMLA")', { ChildAge: $(this).val() }, function (data) {
+            });
+        }
+    });
+
+    $('.famMbrAvlble').click(function () {
+        var famMembr = $(this).val();
+        alert(famMembr);
+        $.getJSON('@Url.Action("SaveOtherMembrAvlable", "FMLA")', { FamMembr: famMembr }, function (data) { });
+    });
+
+    $('.regPartner').click(function () {
+        var famMembr = $(this).val();
+        $.getJSON('@Url.Action("SaveIsSpouseRegisteredEmp", "FMLA")', { RegEmp: famMembr }, function (data) { });
+    }); 
+
+    $('.partnerLeave').click(function () {
+        var famMembr = $(this).val();
+        $.getJSON('@Url.Action("SaveOtherMembrAvlable", "FMLA")', { FamMembr: famMembr }, function (data) { });
     });
 </script>
 

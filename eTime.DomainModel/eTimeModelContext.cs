@@ -271,5 +271,79 @@ namespace eTime.DomainModel
                 return result;
             }
         }
+
+        public int GetFMLAIDOnLastInsert()
+        {
+            using (var context = new eTimeModelContext())
+            {
+                var result = context.Database.SqlQuery<int>("uspFMLAWebGetFMLAIDOnLastInsert").FirstOrDefault();
+                return result;
+            }
+        }
+
+        public void SaveFMLAReasonCode(int FMLAID, string fmlaReason)
+        {
+            using (var context = new eTimeModelContext())
+            {
+                SqlParameter[] sp = new SqlParameter[]
+                {
+                    new SqlParameter() {ParameterName = "@FMLAID", SqlDbType = SqlDbType.Int, Value = FMLAID},
+                    new SqlParameter() {ParameterName = "@FMLAReason", SqlDbType = SqlDbType.VarChar, Value =  fmlaReason},
+                };
+                var result = context.Database.SqlQuery<FMLARequest>("uspFMLAWebSaveFMLAReason @FMLAID,@FMLAReason", sp).FirstOrDefault();
+            }
+        }
+
+        public void SaveFMLACareMemberName(int FMLAID, string memberName)
+        {
+            using (var context = new eTimeModelContext())
+            {
+                SqlParameter[] sp = new SqlParameter[]
+                {
+                    new SqlParameter() {ParameterName = "@FMLAID", SqlDbType = SqlDbType.Int, Value = FMLAID},
+                    new SqlParameter() {ParameterName = "@MemberName", SqlDbType = SqlDbType.VarChar, Value =  memberName},
+                };
+                var result = context.Database.SqlQuery<FMLARequest>("uspFMLAWebSaveMemberNameForCare @FMLAID,@MemberName", sp).FirstOrDefault();
+            }
+        }
+
+        public void SaveFMLACareMemberRelationship(int FMLAID, string relationship)
+        {
+            using (var context = new eTimeModelContext())
+            {
+                SqlParameter[] sp = new SqlParameter[]
+                {
+                    new SqlParameter() {ParameterName = "@FMLAID", SqlDbType = SqlDbType.Int, Value = FMLAID},
+                    new SqlParameter() {ParameterName = "@Relationship", SqlDbType = SqlDbType.VarChar, Value =  relationship},
+                };
+                var result = context.Database.SqlQuery<FMLARequest>("uspFMLAWebSaveMemberRelationship @FMLAID,@Relationship", sp).FirstOrDefault();
+            }
+        }
+
+        public void SaveFMLACareChildAge(int FMLAID, int childAge)
+        {
+            using (var context = new eTimeModelContext())
+            {
+                SqlParameter[] sp = new SqlParameter[]
+                {
+                    new SqlParameter() {ParameterName = "@FMLAID", SqlDbType = SqlDbType.Int, Value = FMLAID},
+                    new SqlParameter() {ParameterName = "@ChildAge", SqlDbType = SqlDbType.Int, Value =  childAge},
+                };
+                var result = context.Database.SqlQuery<FMLARequest>("uspFMLAWebSaveMemberChildAge @FMLAID,@ChildAge", sp).FirstOrDefault();
+            }
+        }
+
+        public void SaveFMLOtherMembrAvlablBit(int FMLAID, bool isOtherMembrAvlbl)
+        {
+            using (var context = new eTimeModelContext())
+            {
+                SqlParameter[] sp = new SqlParameter[]
+                {
+                    new SqlParameter() {ParameterName = "@FMLAID", SqlDbType = SqlDbType.Int, Value= FMLAID},
+                    new SqlParameter() {ParameterName = "@MemberBit", SqlDbType = SqlDbType.Bit, Value =  isOtherMembrAvlbl},
+                };
+                var result = context.Database.SqlQuery<FMLARequest>("uspFMLAWebSaveOtherMembrAvlablBit @FMLAID,@MemberBit", sp).FirstOrDefault();
+            }
+        }
     }
 }
