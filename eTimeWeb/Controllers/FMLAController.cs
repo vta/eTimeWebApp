@@ -66,6 +66,7 @@ namespace eTimeWeb.Controllers
             else
                 {
                 // Create New FMLA is clicked
+                //RS TBD Populate FMLADetails with Temp data
                 Session["FMLAID"] = null;
 
                 string userId = FetchUserName();
